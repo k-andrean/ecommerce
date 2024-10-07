@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Executive Fountain Pen",
+    "color": "Black",
+    "size": "Standard",
+    "description": "A premium fountain pen with a smooth writing experience, ideal for professional settings.",
+    "details": [
+      "gold-plated nib",
+      "refillable ink",
+      "luxurious design"
+    ],
+    "price": 30000,
+    "category_id": 4,
+    "collection_id": 1,
+    "rating": 4.9,
+    "image_path": "uploads\\1727612331226-pen1.jpg",
+    "quantity": 50
+  },
+  {
+    "name": "Gel Ink Rollerball Pen",
+    "color": "Blue",
+    "size": "Standard",
+    "description": "A gel ink rollerball pen that provides a fluid writing experience, perfect for everyday use.",
+    "details": [
+      "quick-drying ink",
+      "comfortable grip",
+      "refillable"
+    ],
+    "price": 8000,
+    "category_id": 4,
+    "collection_id": 2,
+    "rating": 4.6,
+    "image_path": "uploads\\1727612331227-pen2.jpg",
+    "quantity": 100
+  },
+  {
+    "name": "Stylish Ballpoint Pen",
+    "color": "Silver",
+    "size": "Standard",
+    "description": "A stylish ballpoint pen designed for smooth writing and elegance in meetings.",
+    "details": [
+      "chrome finish",
+      "replaceable cartridge",
+      "clip for pocket"
+    ],
+    "price": 15000,
+    "category_id": 4,
+    "collection_id": 3,
+    "rating": 4.7,
+    "image_path": "uploads\\1727612331230-pen3.jpg",
+    "quantity": 75
+  },
+  {
+    "name": "Highlighter Pen Set",
+    "color": "Assorted",
+    "size": "Standard",
+    "description": "A set of vibrant highlighter pens for emphasizing important notes and documents.",
+    "details": [
+      "chisel tip",
+      "quick-drying",
+      "non-toxic ink"
+    ],
+    "price": 12000,
+    "category_id": 4,
+    "collection_id": 4,
+    "rating": 4.5,
+    "image_path": "uploads\\1727612331231-pen4.jpg",
+    "quantity": 60
+  },
+  {
+    "name": "Marker Pen Set",
+    "color": "Assorted",
+    "size": "Standard",
+    "description": "A set of permanent marker pens suitable for various surfaces, ideal for office use.",
+    "details": [
+      "fine tip",
+      "water-resistant",
+      "quick-drying"
+    ],
+    "price": 18000,
+    "category_id": 4,
+    "collection_id": 5,
+    "rating": 4.8,
+    "image_path": "uploads\\1727612331232-pen5.jpg",
+    "quantity": 40
+  }
+]

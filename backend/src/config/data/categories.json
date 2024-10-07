@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Table",
+    "description": "Various types of tables suitable for dining, working, or displaying items.",
+    "image_path": "uploads\\1728135092270-deskcollection.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Chair",
+    "description": "Comfortable chairs for dining, office, or lounging.",
+    "image_path": "uploads\\1728135092271-chaircollection.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Desk Lamp",
+    "description": "Stylish desk lamps that provide focused lighting for work and study.",
+    "image_path": "uploads\\1728135092273-lampcollection.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Pen",
+    "description": "Quality pens for writing, drawing, and creative expression.",
+    "image_path": "uploads\\1728135092277-pencollection2.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Notebook",
+    "description": "Notebooks for taking notes, journaling, or sketching.",
+    "image_path": "uploads\\1728135092278-notebookcategories.jpg"
+  }
+]

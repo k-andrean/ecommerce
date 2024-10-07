@@ -1,0 +1,346 @@
+// table
+[
+    {
+        "name": "Folding Table",
+        "color": "Khaki",
+        "size": "L",
+        "description": "Folded table made of organic woods, handcrafted for durability.",
+        "details": ["with drawer", "three legged", "rounded"],
+        "price": 259000,
+        "category_id": "1",
+        "collection_id": "1",
+        "rating": 4.55,
+        "image_path": "",
+        "quantity": 10
+    },
+    {
+        "name": "Dining Table",
+        "color": "Dark Oak",
+        "size": "XL",
+        "description": "Elegant dining table perfect for family gatherings.",
+        "details": ["extendable", "solid wood", "water-resistant finish"],
+        "price": 599000,
+        "category_id": "2",
+        "collection_id": "1",
+        "rating": 4.8,
+        "image_path": "",
+        "quantity": 5
+    },
+    {
+        "name": "Coffee Table",
+        "color": "White",
+        "size": "M",
+        "description": "Stylish coffee table with a sleek design for modern living rooms.",
+        "details": ["glass top", "metal legs", "easy to clean"],
+        "price": 135000,
+        "category_id": "3",
+        "collection_id": "2",
+        "rating": 4.6,
+        "image_path": "",
+        "quantity": 15
+    },
+    {
+        "name": "Side Table",
+        "color": "Walnut",
+        "size": "S",
+        "description": "Compact side table ideal for small spaces.",
+        "details": ["two shelves", "sturdy build", "easy assembly"],
+        "price": 75000,
+        "category_id": "4",
+        "collection_id": "3",
+        "rating": 4.4,
+        "image_path": "",
+        "quantity": 20
+    },
+    {
+        "name": "Console Table",
+        "color": "Black",
+        "size": "M",
+        "description": "Versatile console table suitable for hallways and living rooms.",
+        "details": ["slim design", "four drawers", "metal handles"],
+        "price": 220000,
+        "category_id": "5",
+        "collection_id": "4",
+        "rating": 4.7,
+        "image_path": "",
+        "quantity": 8
+    }
+]
+// desk lamp
+[
+    {
+        "name": "Modern Desk Lamp",
+        "color": "Black",
+        "size": "M",
+        "description": "Sleek and stylish desk lamp with adjustable brightness.",
+        "details": ["LED light", "touch control", "rotatable head"],
+        "price": 45000,
+        "category_id": "6",
+        "collection_id": "5",
+        "rating": 4.5,
+        "image_path": "",
+        "quantity": 30
+    },
+    {
+        "name": "Vintage Desk Lamp",
+        "color": "Brass",
+        "size": "M",
+        "description": "Classic desk lamp with an antique finish and warm light.",
+        "details": ["adjustable arm", "Edison bulb", "heavy base"],
+        "price": 85000,
+        "category_id": "6",
+        "collection_id": "5",
+        "rating": 4.7,
+        "image_path": "",
+        "quantity": 15
+    },
+    {
+        "name": "Minimalist Desk Lamp",
+        "color": "White",
+        "size": "S",
+        "description": "Compact and modern lamp, perfect for small workspaces.",
+        "details": ["USB charging port", "energy-efficient", "sleek design"],
+        "price": 32000,
+        "category_id": "6",
+        "collection_id": "6",
+        "rating": 4.6,
+        "image_path": "",
+        "quantity": 20
+    },
+    {
+        "name": "Smart Desk Lamp",
+        "color": "Gray",
+        "size": "L",
+        "description": "Smart desk lamp with app control and color changing features.",
+        "details": ["Bluetooth enabled", "multiple light modes", "energy-saving"],
+        "price": 95000,
+        "category_id": "6",
+        "collection_id": "6",
+        "rating": 4.8,
+        "image_path": "",
+        "quantity": 10
+    },
+    {
+        "name": "Artistic Desk Lamp",
+        "color": "Red",
+        "size": "M",
+        "description": "Unique lamp design, ideal for creative workspaces.",
+        "details": ["handcrafted", "adjustable height", "decorative base"],
+        "price": 72000,
+        "category_id": "6",
+        "collection_id": "5",
+        "rating": 4.4,
+        "image_path": "",
+        "quantity": 12
+    }
+]
+
+// notebook
+
+[
+    {
+        "name": "Classic Spiral Notebook",
+        "color": "Blue",
+        "size": "A5",
+        "description": "A classic spiral notebook with a durable cover and lined pages.",
+        "details": ["200 pages", "wire-o binding", "perforated pages"],
+        "price": 15000,
+        "category_id": "4",
+        "collection_id": "8",
+        "rating": 4.5,
+        "image_path": "",
+        "quantity": 50
+    },
+    {
+        "name": "Leather Bound Notebook",
+        "color": "Brown",
+        "size": "A4",
+        "description": "Elegant leather-bound notebook perfect for professionals.",
+        "details": ["100 pages", "elastic band", "pen holder"],
+        "price": 75000,
+        "category_id": "4",
+        "collection_id": "8",
+        "rating": 4.8,
+        "image_path": "",
+        "quantity": 20
+    },
+    {
+        "name": "Eco-Friendly Notebook",
+        "color": "Green",
+        "size": "B5",
+        "description": "Sustainable notebook made from recycled paper.",
+        "details": ["150 pages", "biodegradable cover", "minimalistic design"],
+        "price": 25000,
+        "category_id": "4",
+        "collection_id": "9",
+        "rating": 4.6,
+        "image_path": "",
+        "quantity": 30
+    },
+    {
+        "name": "Grid Dot Notebook",
+        "color": "White",
+        "size": "A5",
+        "description": "Stylish grid dot notebook for bullet journaling and sketches.",
+        "details": ["160 pages", "sturdy cover", "lay-flat binding"],
+        "price": 20000,
+        "category_id": "4",
+        "collection_id": "9",
+        "rating": 4.7,
+        "image_path": "",
+        "quantity": 40
+    },
+    {
+        "name": "Travel Journal Notebook",
+        "color": "Navy",
+        "size": "A6",
+        "description": "Compact travel journal for capturing thoughts on the go.",
+        "details": ["80 pages", "pocket size", "map pages included"],
+        "price": 18000,
+        "category_id": "4",
+        "collection_id": "8",
+        "rating": 4.4,
+        "image_path": "",
+        "quantity": 25
+    }
+]
+
+// chair
+
+[
+    {
+        "name": "Ergonomic Office Chair",
+        "color": "Black",
+        "size": "Standard",
+        "description": "An ergonomic office chair designed for maximum comfort during long hours of work.",
+        "details": ["adjustable height", "lumbar support", "swivel base"],
+        "price": 120000,
+        "category_id": "6",
+        "collection_id": "10",
+        "rating": 4.9,
+        "image_path": "",
+        "quantity": 15
+    },
+    {
+        "name": "Modern Dining Chair",
+        "color": "White",
+        "size": "Standard",
+        "description": "A sleek modern dining chair that fits perfectly with any dining table.",
+        "details": ["stackable", "durable plastic", "non-slip feet"],
+        "price": 85000,
+        "category_id": "6",
+        "collection_id": "11",
+        "rating": 4.6,
+        "image_path": "",
+        "quantity": 30
+    },
+    {
+        "name": "Recliner Chair",
+        "color": "Gray",
+        "size": "Large",
+        "description": "A cozy recliner chair that provides ultimate relaxation with adjustable reclining positions.",
+        "details": ["foldable", "cup holder", "soft fabric"],
+        "price": 250000,
+        "category_id": "6",
+        "collection_id": "12",
+        "rating": 4.8,
+        "image_path": "",
+        "quantity": 10
+    },
+    {
+        "name": "Accent Chair",
+        "color": "Teal",
+        "size": "Medium",
+        "description": "A stylish accent chair that adds a pop of color to any room.",
+        "details": ["high back", "soft upholstery", "wooden legs"],
+        "price": 95000,
+        "category_id": "6",
+        "collection_id": "10",
+        "rating": 4.7,
+        "image_path": "",
+        "quantity": 20
+    },
+    {
+        "name": "Gaming Chair",
+        "color": "Red",
+        "size": "Standard",
+        "description": "A gaming chair designed for comfort and style, perfect for long gaming sessions.",
+        "details": ["adjustable armrests", "reclining feature", "breathable material"],
+        "price": 180000,
+        "category_id": "6",
+        "collection_id": "11",
+        "rating": 4.5,
+        "image_path": "",
+        "quantity": 25
+    }
+]
+
+// pen
+
+[
+    {
+        "name": "Executive Fountain Pen",
+        "color": "Black",
+        "size": "Standard",
+        "description": "A premium fountain pen with a smooth writing experience, ideal for professional settings.",
+        "details": ["gold-plated nib", "refillable ink", "luxurious design"],
+        "price": 30000,
+        "category_id": "7",
+        "collection_id": "13",
+        "rating": 4.9,
+        "image_path": "",
+        "quantity": 50
+    },
+    {
+        "name": "Gel Ink Rollerball Pen",
+        "color": "Blue",
+        "size": "Standard",
+        "description": "A gel ink rollerball pen that provides a fluid writing experience, perfect for everyday use.",
+        "details": ["quick-drying ink", "comfortable grip", "refillable"],
+        "price": 8000,
+        "category_id": "7",
+        "collection_id": "14",
+        "rating": 4.6,
+        "image_path": "",
+        "quantity": 100
+    },
+    {
+        "name": "Stylish Ballpoint Pen",
+        "color": "Silver",
+        "size": "Standard",
+        "description": "A stylish ballpoint pen designed for smooth writing and elegance in meetings.",
+        "details": ["chrome finish", "replaceable cartridge", "clip for pocket"],
+        "price": 15000,
+        "category_id": "7",
+        "collection_id": "15",
+        "rating": 4.7,
+        "image_path": "",
+        "quantity": 75
+    },
+    {
+        "name": "Highlighter Pen Set",
+        "color": "Assorted",
+        "size": "Standard",
+        "description": "A set of vibrant highlighter pens for emphasizing important notes and documents.",
+        "details": ["chisel tip", "quick-drying", "non-toxic ink"],
+        "price": 12000,
+        "category_id": "7",
+        "collection_id": "16",
+        "rating": 4.5,
+        "image_path": "",
+        "quantity": 60
+    },
+    {
+        "name": "Marker Pen Set",
+        "color": "Assorted",
+        "size": "Standard",
+        "description": "A set of permanent marker pens suitable for various surfaces, ideal for office use.",
+        "details": ["fine tip", "water-resistant", "quick-drying"],
+        "price": 18000,
+        "category_id": "7",
+        "collection_id": "17",
+        "rating": 4.8,
+        "image_path": "",
+        "quantity": 40
+    }
+]

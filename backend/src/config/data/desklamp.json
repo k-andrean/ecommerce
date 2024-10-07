@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Modern Desk Lamp",
+    "color": "Black",
+    "size": "M",
+    "description": "Sleek and stylish desk lamp with adjustable brightness.",
+    "details": [
+      "LED light",
+      "touch control",
+      "rotatable head"
+    ],
+    "price": 45000,
+    "category_id": 3,
+    "collection_id": 1,
+    "rating": 4.5,
+    "image_path": "uploads\\1727612482883-desklamp1.jpg",
+    "quantity": 30
+  },
+  {
+    "name": "Vintage Desk Lamp",
+    "color": "Brass",
+    "size": "M",
+    "description": "Classic desk lamp with an antique finish and warm light.",
+    "details": [
+      "adjustable arm",
+      "Edison bulb",
+      "heavy base"
+    ],
+    "price": 85000,
+    "category_id": 3,
+    "collection_id": 2,
+    "rating": 4.7,
+    "image_path": "uploads\\1727612482884-desklamp2.jpg",
+    "quantity": 15
+  },
+  {
+    "name": "Minimalist Desk Lamp",
+    "color": "White",
+    "size": "S",
+    "description": "Compact and modern lamp, perfect for small workspaces.",
+    "details": [
+      "USB charging port",
+      "energy-efficient",
+      "sleek design"
+    ],
+    "price": 32000,
+    "category_id": 3,
+    "collection_id": 3,
+    "rating": 4.6,
+    "image_path": "uploads\\1727612482886-desklamp3.jpg",
+    "quantity": 20
+  },
+  {
+    "name": "Smart Desk Lamp",
+    "color": "Gray",
+    "size": "L",
+    "description": "Smart desk lamp with app control and color changing features.",
+    "details": [
+      "Bluetooth enabled",
+      "multiple light modes",
+      "energy-saving"
+    ],
+    "price": 95000,
+    "category_id": 3,
+    "collection_id": 4,
+    "rating": 4.8,
+    "image_path": "uploads\\1727612482892-desklamp4.jpg",
+    "quantity": 10
+  },
+  {
+    "name": "Artistic Desk Lamp",
+    "color": "Red",
+    "size": "M",
+    "description": "Unique lamp design, ideal for creative workspaces.",
+    "details": [
+      "handcrafted",
+      "adjustable height",
+      "decorative base"
+    ],
+    "price": 72000,
+    "category_id": 3,
+    "collection_id": 5,
+    "rating": 4.4,
+    "image_path": "uploads\\1727612482895-desklamp5.jpg",
+    "quantity": 12
+  }
+]

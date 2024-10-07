@@ -1,0 +1,87 @@
+[
+    {
+        "name": "Folding Table",
+        "color": "Khaki",
+        "size": "L",
+        "description": "Folded table made of organic woods, handcrafted for durability.",
+        "details": [
+            "with drawer",
+            "three legged",
+            "rounded"
+        ],
+        "price": 259000,
+        "category_id": 1,
+        "collection_id": 1,
+        "rating": 4.55,
+        "image_path": "uploads\\1727611414765-table1.jpg",
+        "quantity": 10
+    },
+    {
+        "name": "Dining Table",
+        "color": "Dark Oak",
+        "size": "XL",
+        "description": "Elegant dining table perfect for family gatherings.",
+        "details": [
+            "extendable",
+            "solid wood",
+            "water-resistant finish"
+        ],
+        "price": 599000,
+        "category_id": 1,
+        "collection_id": 2,
+        "rating": 4.8,
+        "image_path": "uploads\\1727611414770-table2.jpg",
+        "quantity": 5
+    },
+    {
+        "name": "Coffee Table",
+        "color": "White",
+        "size": "M",
+        "description": "Stylish coffee table with a sleek design for modern living rooms.",
+        "details": [
+            "glass top",
+            "metal legs",
+            "easy to clean"
+        ],
+        "price": 135000,
+        "category_id": 1,
+        "collection_id": 3,
+        "rating": 4.6,
+        "image_path": "uploads\\1727611414771-table3.jpg",
+        "quantity": 15
+    },
+    {
+        "name": "Side Table",
+        "color": "Walnut",
+        "size": "S",
+        "description": "Compact side table ideal for small spaces.",
+        "details": [
+            "two shelves",
+            "sturdy build",
+            "easy assembly"
+        ],
+        "price": 75000,
+        "category_id": 1,
+        "collection_id": 4,
+        "rating": 4.4,
+        "image_path": "uploads\\1727611414774-table4.jpg",
+        "quantity": 20
+    },
+    {
+        "name": "Console Table",
+        "color": "Black",
+        "size": "M",
+        "description": "Versatile console table suitable for hallways and living rooms.",
+        "details": [
+            "slim design",
+            "four drawers",
+            "metal handles"
+        ],
+        "price": 220000,
+        "category_id": 1,
+        "collection_id": 5,
+        "rating": 4.7,
+        "image_path": "uploads\\1727611414777-table5.jpg",
+        "quantity": 8
+    }
+]

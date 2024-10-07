@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "Organic Based Collection",
+    "description": "Keep your book, stationery, and equipment together, so you can lose everything at once.",
+    "image_path": "uploads\\1728135232067-notebookcollections.jpg"
+  },
+  {
+    "id": 2,
+    "name": "Complementary Desk Collection",
+    "description": "The rest of the house will still be a mess, but your desk will look great.",
+    "image_path": "uploads\\1728135232069-workchaircollection.jpg"
+  },
+  {
+    "id": 3,
+    "name": "Focus Collection",
+    "description": "Be more productive than enterprise project managers with our performance enhancing items.",
+    "image_path": "uploads\\1728135232074-desklampcollection2.jpg"
+  },
+  {
+    "id": 4,
+    "name": "Creative Collection",
+    "description": "Inspire yourself and be more creative with our colorful and full of personality items.",
+    "image_path": "uploads\\1728135232076-accessorypopularheader.jpg"
+  },
+  {
+    "id": 5,
+    "name": "Accessory Collection",
+    "description": "This collection includes multiple accessories and pens designed for artists, writers, and anyone who loves to create.",
+    "image_path": "uploads\\1728135232078-accesoryheader.jpg"
+  }
+]

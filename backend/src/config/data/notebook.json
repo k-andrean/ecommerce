@@ -1,0 +1,87 @@
+[
+  {
+    "name": "Classic Spiral Notebook",
+    "color": "Blue",
+    "size": "A5",
+    "description": "A classic spiral notebook with a durable cover and lined pages.",
+    "details": [
+      "200 pages",
+      "wire-o binding",
+      "perforated pages"
+    ],
+    "price": 15000,
+    "category_id": 5,
+    "collection_id": 1,
+    "rating": 4.5,
+    "image_path": "uploads\\1727612565718-notebook1.jpg",
+    "quantity": 50
+  },
+  {
+    "name": "Leather Bound Notebook",
+    "color": "Brown",
+    "size": "A4",
+    "description": "Elegant leather-bound notebook perfect for professionals.",
+    "details": [
+      "100 pages",
+      "elastic band",
+      "pen holder"
+    ],
+    "price": 75000,
+    "category_id": 5,
+    "collection_id": 2,
+    "rating": 4.8,
+    "image_path": "uploads\\1727612565720-notebook2.jpg",
+    "quantity": 20
+  },
+  {
+    "name": "Eco-Friendly Notebook",
+    "color": "Green",
+    "size": "B5",
+    "description": "Sustainable notebook made from recycled paper.",
+    "details": [
+      "150 pages",
+      "biodegradable cover",
+      "minimalistic design"
+    ],
+    "price": 25000,
+    "category_id": 5,
+    "collection_id": 3,
+    "rating": 4.6,
+    "image_path": "uploads\\1727612565723-notebook3.jpg",
+    "quantity": 30
+  },
+  {
+    "name": "Grid Dot Notebook",
+    "color": "White",
+    "size": "A5",
+    "description": "Stylish grid dot notebook for bullet journaling and sketches.",
+    "details": [
+      "160 pages",
+      "sturdy cover",
+      "lay-flat binding"
+    ],
+    "price": 20000,
+    "category_id": 5,
+    "collection_id": 4,
+    "rating": 4.7,
+    "image_path": "uploads\\1727612565724-notebook4.jpg",
+    "quantity": 40
+  },
+  {
+    "name": "Travel Journal Notebook",
+    "color": "Navy",
+    "size": "A6",
+    "description": "Compact travel journal for capturing thoughts on the go.",
+    "details": [
+      "80 pages",
+      "pocket size",
+      "map pages included"
+    ],
+    "price": 18000,
+    "category_id": 5,
+    "collection_id": 5,
+    "rating": 4.4,
+    "image_path": "uploads\\1727612565726-notebook5.jpg",
+    "quantity": 25
+  }
+]

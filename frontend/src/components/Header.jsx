@@ -1,4 +1,6 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import {
   Bars3Icon,
@@ -7,6 +9,7 @@ import {
   XMarkIcon,
 } from '@heroicons/react/24/outline'
 
+import LogoHeader from 'assets/logo.svg'
 import DeskLampHeader from 'assets/desklampheader.jpg'
 import PenHeader from 'assets/penheader.jpg'
 import AccessoryHeader from 'assets/accesoryheader.jpg'
@@ -17,6 +20,9 @@ import PenPopularHeader from 'assets/penpopularheader.jpg'
 import AccessoryPopularHeader from 'assets/accessorypopularheader.jpg'
 import HighlightPopularHeader from 'assets/highlightpopularheader.jpg'
 
+import { logout } from 'store/reducer/user'
+import fetchAxios from 'utils/axios'
+
 const navigation = {
   categories: [
     {
@@ -24,25 +30,25 @@ const navigation = {
       featured: [
         {
           name: 'New Arrivals',
-          href: '#',
+          href: `/categories/Desk%20Lamp?id=47`,
           imageSrc: DeskLampHeader,
           imageAlt: 'Models sitting in desk working with desklamp.',
         },
         {
           name: 'Basic',
-          href: '#',
+          href: `/categories/Pen?id=48`,
           imageSrc: PenHeader,
           imageAlt: 'Pen and notebook with decoration on top of wood desk.',
         },
         {
           name: 'Accessories',
-          href: '#',
+          href: `/collections/Accessories%20Collection?id=5`,
           imageSrc: AccessoryHeader,
           imageAlt: 'Assortment of stationaries on top of white desk.',
         },
         {
           name: 'Highlight',
-          href: '#',
+          href: `/products/all`,
           imageSrc: HighlightHeader,
           imageAlt: 'Model sitting and typing on computer placed on top of working desk.',
         },
@@ -53,26 +59,26 @@ const navigation = {
       featured: [
         {
           name: 'New Arrivals',
-          href: '#',
+          href: `/collections/Creative%20Collection?id=4`,
           imageSrc: NewArrivalPopularHeader,
           imageAlt: 'Model writing on personal diary while sitting on work chair and desk.',
         },
         {
           name: 'Basic',
-          href: '#',
+          href: '/products/all',
           imageSrc: PenPopularHeader,
           imageAlt: 'Golden pen high class stationery highlighted on top of white desk.',
         },
         {
-          name: 'Accessories',
-          href: '#',
+          name: 'Working',
+          href: `/categories/Work%20Chairs?id=47`,
           imageSrc: AccessoryPopularHeader,
           imageAlt:
             'Chair with table and notebook arrangement.',
         },
         {
           name: 'Highlight',
-          href: '#',
+          href: `/categories/Work%20Desks?id=49`,
           imageSrc: HighlightPopularHeader,
           imageAlt: 'Model sitting on chair facing desk with computer and calculator placed on top of desk.',
         },
@@ -88,7 +94,50 @@ function classNames(...classes) {
 
 
 const Header = ({ }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { userId, username, expire } = useSelector((state) => state.userData);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const toggleSearch = () => {
+    setIsSearchActive((prev) => !prev);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const response = await fetchAxios.get(`/products/name/search?name=${searchTerm}`);
+      console.log('response', response)
+
+      if (response?.data && response?.data?.length > 0) {
+        const product = response?.data?.[0];
+        window.location.href = `/products/detail/${product.id}`;
+      } else {
+        console.log('No products found');
+      }
+    } catch (error) {
+      console.error('Error fetching search results:', error);
+    }
+  };
+
+  const totalQuantity = useSelector((state) =>
+  state.cartData.items.reduce((total, item) => total + item.quantity, 0)
+);
+
+  // Function to check if the session has expired
+  const isSessionExpired = () => {
+    const currentTime = Date.now();
+    return currentTime > expire;
+  };
+
+  useEffect(() => {
+    // Check if the session has expired on component mount or when `expire` changes
+    if (expire && isSessionExpired()) {
+      dispatch(logout());
+      navigate('/');
+    }
+  }, [expire, dispatch, navigate]);
 
   return (
      <div className="bg-white">
@@ -157,10 +206,10 @@ const Header = ({ }) => {
                               <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-md bg-gray-100 group-hover:opacity-75">
                                 <img src={item.imageSrc} alt={item.imageAlt} className="object-cover object-center" />
                               </div>
-                              <a href={item.href} className="mt-6 block text-sm font-medium text-red-400">
+                              <Link to={item.href} className="mt-6 block text-sm font-medium text-red-400">
                                 <span className="absolute inset-0 z-10" aria-hidden="true" />
                                 {item.name}
-                              </a>
+                              </Link>
                               <p aria-hidden="true" className="mt-1 text-xs text-gray-500">
                                 Shop now
                               </p>
@@ -199,15 +248,49 @@ const Header = ({ }) => {
               <div>
                 <div className="flex h-16 items-center justify-between">
                   {/* Logo (lg+) */}
-                  <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                    <a href="#">
-                      <span className="sr-only">Your Company</span>
+                  <div className="flex lg:flex-1 items-center">
+                    <Link className="flex items center gap-3" to="/">
                       <img
-                        className="h-8 w-auto"
-                        src="https://tailwindui.com/img/logos/mark.svg?color=white"
+                        className="h-9 w-auto"
+                        src={LogoHeader}
                         alt=""
                       />
-                    </a>
+                      <span className="text-2xl font-bold text-yellow-300">WorKIT</span>
+                    </Link>
+
+                 {/* Search Icon and Input */}
+                  <div className="relative flex items-center ml-2">
+                    <button
+                      onClick={toggleSearch}
+                      className="p-2 text-white"
+                      aria-label="Search"
+                    >
+                      <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+                    </button>
+                    
+                    {isSearchActive && (
+                        // <div className="flex items-center ml-2">
+                            <div
+      className="absolute left-0 top-[70%] mt-2 flex items-center bg-white p-2 border border-gray-300 rounded-md shadow-md"
+      style={{ minWidth: '250px' }} // Set a minimum width for the input container
+    >
+                          <input
+                            type="text"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none"
+                            placeholder="Search Product..."
+                          />
+                          <button
+                            onClick={handleSearch}
+                            className="ml-2 p-2 bg-yellow-500 text-white rounded"
+                          >
+                            Search
+                          </button>
+                        </div>
+                      )}
+                  </div>
                   </div>
 
                   <div className="hidden h-full lg:flex">
@@ -216,7 +299,7 @@ const Header = ({ }) => {
                       <div className="flex h-full justify-center space-x-14">
                         {navigation.categories.map((category) => (
                           <Popover key={category.name} className="flex">
-                            {({ open }) => (
+                            {({ open, close }) => (
                               <>
                                 <div className="relative flex">
                                   <Popover.Button className="relative z-10 flex items-center justify-center text-xl text-white font-bold hover:text-gray-400 transition-colors duration-200 ease-out">
@@ -256,10 +339,14 @@ const Header = ({ }) => {
                                                   className="object-cover object-center"
                                                 />
                                               </div>
-                                              <a href={item.href} className="mt-4 block font-bold text-red-500">
-                                                <span className="absolute inset-0 z-10" aria-hidden="true" />
-                                                {item.name}
-                                              </a>
+                                              <Link 
+                                                to={item.href} 
+                                                className="mt-4 block font-bold text-red-500"
+                                                onClick={() => close()}
+                                                >
+                                                  <span className="absolute inset-0 z-10" aria-hidden="true" />
+                                                  {item.name}
+                                              </Link>
                                               <p aria-hidden="true" className="mt-1">
                                                 Shop now
                                               </p>
@@ -286,48 +373,68 @@ const Header = ({ }) => {
                     </button>
 
                     {/* Search */}
-                    <a href="#" className="ml-2 p-2 text-white">
+                    {/* <a href="#" className="ml-2 p-2 text-white">
                       <span className="sr-only">Search</span>
                       <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-                    </a>
+                    </a> */}
                   </div>
 
                   <div className="flex flex-1 items-center justify-end">
-                      {/* <a href="#" className="hidden text-sm font-medium text-white lg:block">
-                        Sign In
-                      </a> */}
-
-                      <div className="flex items-center lg:ml-8">
-                        <a href="#" className="p-2 text-white lg:hidden">
-                         
-                          <span className="text-xs font-medium text-gray-900">
-                            Login
-                          </span>
-                        </a>
-                        <a href="#" className="hidden text-sm font-medium text-gray-900 lg:block lg:mr-4">
-                          Sign In
-                        </a>
+                    {userId? (
+                       <div className="flex items-center gap-2">
+                       {/* Render "Orders" link if the user is logged in */}
+                       <Link 
+                         to={`orders/history/${userId}`} 
+                         className="text-sm font-medium text-white lg:block lg:mr-4"
+                       >
+                         Orders
+                       </Link>
+             
+                       {/* Logout Link styled like Orders */}
+                       <Link
+                         to="/"
+                         className="text-sm font-medium text-white lg:block lg:mr-4"
+                         onClick={(e) => {
+                           e.preventDefault(); // Prevent immediate navigation
+                           dispatch(logout());
+                           navigate('/');
+                         }}
+                       >
+                         Logout
+                       </Link>
+                     </div>
                     
-                        <a href="#" className="p-2 text-white lg:hidden">
-                         
-                          <span className="text-xs font-medium text-gray-900">
-                            Sign Up
-                          </span>
-                        </a>
-                        <a href="#" className="hidden text-sm font-medium text-gray-900 lg:block">
-                          Create Account
-                        </a>
+                    ) : (
+                      // Render sign-in, login, and create account links if the user is not logged in
+                      <>
+                        <Link to={"/login"} className="p-2 text-white lg:hidden">
+                          <span className="text-xs font-medium text-gray-900">Login</span>
+                        </Link>
+                        <Link to={"/login"} className="hidden text-sm font-medium text-gray-900 lg:block lg:mr-4">
+                          Login
+                        </Link>
 
+                        <Link href={"/register"} className="p-2 text-white lg:hidden">
+                          <span className="text-xs font-medium text-gray-900">Sign Up</span>
+                        </Link>
+                        <Link href={"/register"} className="hidden text-sm font-medium text-gray-900 lg:block">
+                          Create Account
+                        </Link>
+                      </>
+                    )}
                         {/* Cart */}
                         <div className="ml-4 flow-root lg:ml-4">
-                          <a href="#" className="group -m-2 flex items-center p-2">
+                          <Link 
+                          className="group -m-2 flex items-center p-2"
+                          to={`/cart`} 
+                          >
                             <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-900 font-bold" aria-hidden="true" />
-                            <span className="ml-2 text-sm font-bold text-gray-900">0</span>
+                            <span className="ml-2 text-sm font-bold text-gray-900">{totalQuantity}</span>
                             <span className="sr-only">items in cart, view bag</span>
-                          </a>
+                          </Link>
                         </div>
                       </div>
-                    </div>
+                    
                 </div>
               </div>
             </div>

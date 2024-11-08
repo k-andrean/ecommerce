@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 
 
-export const getProducts = async () => {
+export const getAllProductsList = async () => {
   const { rows } = await pool.query('SELECT * FROM products');
   return rows;
 };
@@ -13,6 +13,17 @@ export const getProductById = async (id) => {
 
 export const getProductByCategoryId = async (categoryId) => {
   const { rows } = await pool.query('SELECT * FROM products WHERE category_id = $1', [categoryId]);
+  return rows;
+};
+
+export const getProductByCollectionId = async (collectionId) => {
+  const { rows } = await pool.query(
+    `SELECT products.*, collections.description AS collection_description
+     FROM products
+     JOIN collections ON products.collection_id = collections.id
+     WHERE collections.id = $1`, 
+    [collectionId]
+  );
   return rows;
 };
 
@@ -144,5 +155,19 @@ export const createBulkProducts = async (products) => {
   };
 
 export const deleteProduct = async (id) => {
-  await pool.query('DELETE FROM products WHERE id = $1', [id]);
+  const result = await pool.query('DELETE FROM products WHERE id = $1', [id]);
+  return result.rowCount;
+};
+
+export const deleteAllProducts = async () => {
+  await pool.query('DELETE FROM products');
+};
+
+export const searchProductByName = async (name) => {
+  console.log('name', name)
+  const { rows } = await pool.query(
+    `SELECT * FROM products WHERE name ILIKE $1`,
+    [`%${name}%`]
+  );
+  return rows;
 };

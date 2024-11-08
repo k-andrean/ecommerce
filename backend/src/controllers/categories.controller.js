@@ -1,4 +1,4 @@
-import { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory } from "../models/categories.js";
+import { getCategories, getCategoryById, createCategory, updateCategory, deleteCategory, deleteAllCategories } from "../models/categories.js";
 
 
 export const getAllCategories = async (req, res, next) => {
@@ -53,11 +53,23 @@ export const createMultiCategories = async (req, res, next) => {
 export const updateExistingCategory = async (req, res, next) => {
   try {
     const image = req.file; // Get image from uploaded files (if any)
+    const categoryId = parseInt(req.params.id, 10);
+
+    if (isNaN(categoryId)) {
+      return res.status(400).json({ message: `Invalid ID for category: ${categoryId}` });
+    }
+
+    const existingCategory = await getCategoryById(categoryId);
+    if (!existingCategory) {
+      return res.status(404).json({ message: `No category found with ID ${categoryId}` });
+    }
+
     const dataCategory = {
       ...req.body,
-      image_path: image ? image.path : null  // Use image path if uploaded, else null
-  };
-    const updatedCategory = await updateCategory(parseInt(dataCategory.id), dataCategory);
+      image_path: image ? image.path : existingCategory.image_path  // Use new image path if uploaded, otherwise keep the existing one
+    };
+
+    const updatedCategory = await updateCategory(categoryId, dataCategory);
     if (updatedCategory) {
       res.status(200).json(updatedCategory);
     } else {
@@ -69,7 +81,13 @@ export const updateExistingCategory = async (req, res, next) => {
 };
 
 export const updateMultiCategories = async (req, res, next) => {
-  const { categories } = req.body; // Extract the categories array from the request body
+  // const { categories } = req.body;
+  
+  const categories = typeof req.body.categories === 'string'
+  ? JSON.parse(req.body.categories)
+  : req.body.categories;
+
+  // console.log('categories', categories);
 
   // Check if the categories are provided
   if (!categories || !categories.length) {
@@ -81,8 +99,8 @@ export const updateMultiCategories = async (req, res, next) => {
 
     // Loop through each category in the request
     for (const category of categories) {
-      const { id, name, description, image_path } = category;
-
+      const { id, name, description } = category;
+      
       // Ensure that id is valid and explicitly parse it as an integer
       const parsedId = parseInt(id, 10);
 
@@ -90,12 +108,21 @@ export const updateMultiCategories = async (req, res, next) => {
         return res.status(400).json({ message: `Invalid ID for category: ${JSON.stringify(category)}` });
       }
 
-      // Update each category by its ID using the updateCategory function
-      const updatedCategory = await updateCategory(parsedId, {
+      // Fetch the existing category from the database
+      const existingCategory = await getCategoryById(parsedId);
+      if (!existingCategory) {
+        console.error(`No category found with ID ${parsedId}`);
+        continue; // Skip to the next category if it doesn't exist
+      }
+
+      // Prepare the update object, preserving existing image_path if not provided in the request
+      const updateData = {
         name,
         description,
-        image_path,
-      });
+        image_path: category.image_path ? category.image_path : existingCategory.image_path, // Only update if image_path is provided
+      };
+
+      const updatedCategory = await updateCategory(parsedId, updateData);
 
       // Add updated category to the array if successful
       if (updatedCategory) {
@@ -127,12 +154,22 @@ export const removeCategory = async (req, res, next) => {
         return res.status(400).json({ message: "Invalid category ID" });
       }
   
-      const deletedCategory = await deleteCategory(categoryId);
+      const deletedCategoryCount = await deleteCategory(categoryId);
   
-      if (!deletedCategory) {
+      if (deletedCategoryCount === 0) {
         return res.status(404).json({ message: "Category not found" });
       }
   
+      res.status(204).end(); // No content for successful deletion
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  export const removeAllCategoriesController = async (req, res, next) => {
+    try {
+      console.log('delete all called')
+      await deleteAllCategories();
       res.status(204).end(); // No content for successful deletion
     } catch (error) {
       next(error);

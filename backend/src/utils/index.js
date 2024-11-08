@@ -1,7 +1,6 @@
 import { join } from 'path';
 import fs from 'fs';
-
-
+import bcrypt from 'bcrypt';
 
 // Load products from the specified file
 export const loadProductsFromFile = (dirpath, filename) => {
@@ -15,4 +14,14 @@ export const loadProductsFromFile = (dirpath, filename) => {
   } else {
     throw new Error('Product file not found');
   }
+};
+
+
+export const hashPassword = async (password) => {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+};
+
+export const comparePasswords = async (inputPassword, hashedPassword) => {
+  return await bcrypt.compare(inputPassword, hashedPassword);
 };

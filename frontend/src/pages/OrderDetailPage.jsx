@@ -1,3 +1,9 @@
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { useParams, Link } from 'react-router-dom';
+import fetchAxios from 'utils/axios';
+import { useGetOrderDetailQuery } from 'services/ordersAPI';// Make sure to import your custom hook
+
 const products = [
     {
       id: 1,
@@ -13,13 +19,41 @@ const products = [
   ]
   
   const OrderDetailPage = () => {
+    
+    const { orderId } = useParams(); // Get orderId from the URL
+    const currentUserId = useSelector((state) => state.userData.userId);
+    const [orderDetailsData, setOrderDetailsData] = useState({});
+    const [userData, setUserData] = useState({});
+    const { data: orderDetailsRespData, isSuccess: isSuccessOrderDetails } = useGetOrderDetailQuery(currentUserId, orderId);
+   
+    useEffect(() => {
+      if (isSuccessOrderDetails && orderDetailsRespData) {
+          console.log('order details data:', orderDetailsRespData);
+          setOrderDetailsData(orderDetailsRespData);
+
+          // Define an async function to fetch user data
+          const fetchUserData = async () => {
+              try {
+                  const userDataResp = await fetchAxios.get(`/users/${orderDetailsRespData.user_id}`);
+                  setUserData(userDataResp?.data); 
+                  console.log('user data', userDataResp)
+              } catch (error) {
+                  console.error('Error fetching user data:', error);
+              }
+          };
+
+          // Call the async function
+          fetchUserData();
+      }
+  }, [isSuccessOrderDetails, orderDetailsRespData]);
+   
     return (
       <main className="bg-white px-4 pb-24 pt-16 sm:px-6 sm:pt-24 lg:px-8 lg:py-32">
         <div className="mx-auto max-w-3xl">
           <div className="max-w-xl">
             <h1 className="text-base font-medium text-indigo-600">Thank you!</h1>
             <p className="mt-2 text-4xl font-bold tracking-tight">It's on the way!</p>
-            <p className="mt-2 text-base text-gray-500">Your order #14034056 has shipped and will be with you soon.</p>
+            <p className="mt-2 text-base text-gray-500">Your order #{orderDetailsData.id} has shipped and will be with you soon.</p>
   
             <dl className="mt-12 text-sm font-medium">
               <dt className="text-gray-900">Tracking number</dt>
@@ -33,17 +67,20 @@ const products = [
             </h2>
   
             <h3 className="sr-only">Items</h3>
-            {products.map((product) => (
+            {orderDetailsData?.products?.map((product) => (
               <div key={product.id} className="flex space-x-6 border-b border-gray-200 py-10">
                 <img
-                  src={product.imageSrc}
-                  alt={product.imageAlt}
+                  src={product.image_path}
                   className="h-20 w-20 flex-none rounded-lg bg-gray-100 object-cover object-center sm:h-40 sm:w-40"
                 />
                 <div className="flex flex-auto flex-col">
                   <div>
                     <h4 className="font-medium text-gray-900">
-                      <a href={product.href}>{product.name}</a>
+                      <Link 
+                        to={`/products/detail/${product.id}`} 
+                      >
+                        {product.name}
+                      </Link>
                     </h4>
                     <p className="mt-2 text-sm text-gray-600">{product.description}</p>
                   </div>
@@ -55,7 +92,7 @@ const products = [
                       </div>
                       <div className="flex pl-4 sm:pl-6">
                         <dt className="font-medium text-gray-900">Price</dt>
-                        <dd className="ml-2 text-gray-700">{product.price}</dd>
+                        <dd className="ml-2 text-gray-700">Rp {Math.floor(product.price)}</dd>
                       </div>
                     </dl>
                   </div>
@@ -72,9 +109,9 @@ const products = [
                   <dt className="font-medium text-gray-900">Shipping address</dt>
                   <dd className="mt-2 text-gray-700">
                     <address className="not-italic">
-                      <span className="block">Kristin Watson</span>
-                      <span className="block">7363 Cynthia Pass</span>
-                      <span className="block">Toronto, ON N3Y 4H8</span>
+                      <span className="block">{userData?.name}</span>
+                      <span className="block">{orderDetailsData?.shipping_info?.address}</span>
+                      <span className="block">{orderDetailsData?.shipping_info?.city}</span>
                     </address>
                   </dd>
                 </div>
@@ -82,9 +119,8 @@ const products = [
                   <dt className="font-medium text-gray-900">Billing address</dt>
                   <dd className="mt-2 text-gray-700">
                     <address className="not-italic">
-                      <span className="block">Kristin Watson</span>
-                      <span className="block">7363 Cynthia Pass</span>
-                      <span className="block">Toronto, ON N3Y 4H8</span>
+                    <span className="block">{userData?.name}</span>
+                      <span className="block">{orderDetailsData?.shipping_info?.city}</span>
                     </address>
                   </dd>
                 </div>
@@ -95,8 +131,11 @@ const products = [
                 <div>
                   <dt className="font-medium text-gray-900">Payment method</dt>
                   <dd className="mt-2 text-gray-700">
-                    <p>Apple Pay</p>
-                    <p>Mastercard</p>
+                    {orderDetailsData?.payment_info?.paymentIntentId ? (
+                          <p>Stripe</p>
+                      ) : (
+                          <p>Credit Card</p>
+                    )}
                     <p>
                       <span aria-hidden="true">••••</span>
                       <span className="sr-only">Ending in </span>1545
@@ -106,8 +145,8 @@ const products = [
                 <div>
                   <dt className="font-medium text-gray-900">Shipping method</dt>
                   <dd className="mt-2 text-gray-700">
-                    <p>DHL</p>
-                    <p>Takes up to 3 working days</p>
+                    <p>{orderDetailsData?.shipping_info?.shipping_option?.title}</p>
+                    <p>Takes up to {orderDetailsData?.shipping_info?.shipping_option?.turnaround} working days</p>
                   </dd>
                 </div>
               </dl>
@@ -116,23 +155,8 @@ const products = [
   
               <dl className="space-y-6 border-t border-gray-200 pt-10 text-sm">
                 <div className="flex justify-between">
-                  <dt className="font-medium text-gray-900">Subtotal</dt>
-                  <dd className="text-gray-700">$36.00</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="flex font-medium text-gray-900">
-                    Discount
-                    <span className="ml-2 rounded-full bg-gray-200 px-2 py-0.5 text-xs text-gray-600">STUDENT50</span>
-                  </dt>
-                  <dd className="text-gray-700">-$18.00 (50%)</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="font-medium text-gray-900">Shipping</dt>
-                  <dd className="text-gray-700">$5.00</dd>
-                </div>
-                <div className="flex justify-between">
-                  <dt className="font-medium text-gray-900">Total</dt>
-                  <dd className="text-gray-900">$23.00</dd>
+                  <dt className="text-lg font-bold text-gray-900">Total</dt>
+                  <dd className="text-lg font-bold text-gray-900">Rp {Math.floor(orderDetailsData?.total_amount)}</dd>
                 </div>
               </dl>
             </div>

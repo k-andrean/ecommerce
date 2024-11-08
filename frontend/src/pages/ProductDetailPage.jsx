@@ -1,54 +1,19 @@
-import React, { useState } from'react';
-import { Disclosure, RadioGroup, Tab } from '@headlessui/react'
+import React, { useState, useEffect } from'react';
+import { useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { Disclosure } from '@headlessui/react'
+import { addToCart } from 'store/reducer/cart';
+import { useGetProductQuery } from 'services/productsAPI';
+import { classNames } from 'utils';
 import {
   MinusIcon,
   PlusIcon,
 } from '@heroicons/react/24/outline'
 import { StarIcon } from '@heroicons/react/20/solid'
-import CollectionBook from 'assets/collection1.jpg'
-import CollectionBag from 'assets/collection2.jpg'
-import CollectionPen from 'assets/pencollection.jpg'
 import CollectionDesk from 'assets/deskcollection.jpg'
 import CollectionLamp from 'assets/lampcollection.jpg'
 
-
-const product = {
-  name: 'Zip Tote Basket',
-  price: '$140',
-  rating: 4,
-  images: [
-    {
-      id: 1,
-      name: 'Angled view',
-      src: CollectionLamp,
-      alt: 'Angled front view with bag zipped and handles upright.',
-    },
-    // More images...
-  ],
-  colors: [
-    { name: 'Washed Black', bgColor: 'bg-gray-700', selectedColor: 'ring-gray-700' },
-    { name: 'White', bgColor: 'bg-white', selectedColor: 'ring-gray-400' },
-    { name: 'Washed Gray', bgColor: 'bg-gray-500', selectedColor: 'ring-gray-500' },
-  ],
-  description: `
-    <p>The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use.</p>
-  `,
-  details: [
-    {
-      name: 'Features',
-      items: [
-        'Multiple strap configurations',
-        'Spacious interior with top zip',
-        'Leather handle and tabs',
-        'Interior dividers',
-        'Stainless strap loops',
-        'Double stitched construction',
-        'Water-resistant',
-      ],
-    },
-    // More sections...
-  ],
-}
 const relatedProducts = [
   {
     id: 1,
@@ -62,141 +27,136 @@ const relatedProducts = [
   // More products...
 ]
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ')
-}
-
 
 
 const ProductDetailPage = () => {
-  const [selectedColor, setSelectedColor] = useState(product.colors[0])
-    return (
+  const { productId } = useParams();
+  const [productDetailData, setProductDetailData] = useState({});
+  const [quantity, setSelectedQuantity] = useState(1);
+  const dispatch = useDispatch();
+
+  // Get current user ID from the Redux store (from user slice)
+  const currentUserId = useSelector((state) => state.userData.userId);
+
+  // Fetch product details using query (e.g., RTK Query)
+  const { data: productDetailRespData, isSuccess: isSuccessProductDetail } = useGetProductQuery(productId);
+
+  // When product data is successfully fetched, update state
+  useEffect(() => {
+    if (isSuccessProductDetail && productDetailRespData) {
+      console.log('product detail data:', productDetailRespData);
+
+      // Update image_path to include full URL
+      const updatedProductDetail = {
+        ...productDetailRespData,
+        image_path: process.env.REACT_APP_ECOMMERCE_URL + productDetailRespData.image_path.replace(/\\/g, '/'),
+      };
+
+      setProductDetailData(updatedProductDetail);
+    }
+  }, [isSuccessProductDetail, productDetailRespData]);
+
+  // Handle adding the product to the cart
+  const handleAddToCart = () => {
+    if (quantity > 0) {
+      // Ensure userId is available
+      if (!currentUserId) {
+        toast.error('You must be logged in to add products to the cart.');
+        return;
+      }
+
+      // Dispatch addToCart action with userId
+      dispatch(addToCart({ product: productDetailData, quantity: parseInt(quantity), userId: currentUserId }));
+
+      // Update localStorage cart
+      const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingProductIndex = existingCart.findIndex((item) => item.product.id === productDetailData.id);
+
+      if (existingProductIndex !== -1) {
+        // If product exists in cart, update quantity
+        existingCart[existingProductIndex].quantity += parseInt(quantity);
+      } else {
+        // If product does not exist, add new entry
+        existingCart.push({ product: productDetailData, quantity: parseInt(quantity), userId: currentUserId });
+      }
+
+      // Save updated cart to localStorage
+      localStorage.setItem('cart', JSON.stringify(existingCart));
+
+      // Show success toast
+      toast.info('Product added successfully to cart!');
+    } else {
+      // Show error toast if quantity is invalid
+      toast.error('Please select a valid quantity!');
+    }
+};
+
+  return (
         <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8">
         <div className="mx-auto max-w-2xl lg:max-w-none">
           {/* Product */}
           <div className="lg:grid lg:grid-cols-2 lg:items-start lg:gap-x-8">
-            {/* Image gallery */}
-            <Tab.Group as="div" className="flex flex-col-reverse">
-              {/* Image selector */}
-              <div className="mx-auto mt-6 hidden w-full max-w-2xl sm:block lg:max-w-none">
-                <Tab.List className="grid grid-cols-4 gap-6">
-                  {product.images.map((image) => (
-                    <Tab
-                      key={image.id}
-                      className="relative flex h-24 cursor-pointer items-center justify-center rounded-md bg-white text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-offset-4"
-                    >
-                      {({ selected }) => (
-                        <>
-                          <span className="sr-only">{image.name}</span>
-                          <span className="absolute inset-0 overflow-hidden rounded-md">
-                            <img src={image.src} alt="" className="h-full w-full object-cover object-center" />
-                          </span>
-                          <span
-                            className={classNames(
-                              selected ? 'ring-indigo-500' : 'ring-transparent',
-                              'pointer-events-none absolute inset-0 rounded-md ring-2 ring-offset-2'
-                            )}
-                            aria-hidden="true"
-                          />
-                        </>
-                      )}
-                    </Tab>
-                  ))}
-                </Tab.List>
-              </div>
-
-              <Tab.Panels className="aspect-h-1 aspect-w-1 w-full">
-                {product.images.map((image) => (
-                  <Tab.Panel key={image.id}>
-                    <img
-                      src={image.src}
-                      alt={image.alt}
-                      className="h-full w-full object-cover object-center sm:rounded-lg"
-                    />
-                  </Tab.Panel>
-                ))}
-              </Tab.Panels>
-            </Tab.Group>
-
+          {/* Image */}
+          <div className="aspect-h-1 aspect-w-1 w-full">
+            <img
+              src={productDetailData.image_path} // Use the image_path from productDetailData
+              className="h-full w-full object-cover object-center sm:rounded-lg"
+            />
+          </div>
             {/* Product info */}
-            <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
-              <h1 className="text-3xl font-bold tracking-tight text-gray-900">{product.name}</h1>
+            <div className="mt-4 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+              <div className='flex justify-center'>
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900 mb-4">{productDetailData.name}</h1>
+              </div>
 
-              <div className="mt-3">
+              <div className="mt-6">
                 <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl tracking-tight text-gray-900">{product.price}</p>
+                <p className="text-2xl tracking-tight text-gray-900 mt-4 font-semibold">Rp {Math.floor(productDetailData.price)}</p>
               </div>
 
-              {/* Reviews */}
-              <div className="mt-3">
-                <h3 className="sr-only">Reviews</h3>
-                <div className="flex items-center">
-                  <div className="flex items-center">
-                    {[0, 1, 2, 3, 4].map((rating) => (
-                      <StarIcon
-                        key={rating}
-                        className={classNames(
-                          product.rating > rating ? 'text-indigo-500' : 'text-gray-300',
-                          'h-5 w-5 flex-shrink-0'
-                        )}
-                        aria-hidden="true"
-                      />
-                    ))}
-                  </div>
-                  <p className="sr-only">{product.rating} out of 5 stars</p>
-                </div>
-              </div>
+          
 
               <div className="mt-6">
                 <h3 className="sr-only">Description</h3>
 
                 <div
                   className="space-y-6 text-base text-gray-700"
-                  dangerouslySetInnerHTML={{ __html: product.description }}
+                  dangerouslySetInnerHTML={{ __html: productDetailData.description }}
                 />
               </div>
 
+              <div className="mt-6">
+                <label htmlFor="quantity" className="block text-md font-medium text-gray-700 mb-4">
+                  {productDetailData.quantity > 0 ? 'Stock' : 'Out of Stock'}
+                </label>
+                {productDetailData.quantity > 0 ? (
+                  <select
+                    id="quantity"
+                    name="quantity"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                    onChange={(e) => setSelectedQuantity(e.target.value)} // Capture the selected value
+                  >
+                    {/* Spread the stock value to create the options */}
+                    {Array.from({ length: productDetailData.quantity }, (_, i) => i + 1).map((quantity) => (
+                      <option key={quantity} value={quantity}>
+                        {quantity}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <p className="text-red-600 text-sm font-semibold mt-2">Out of Stock</p>
+                )}
+              </div>
+
+            
+
               <form className="mt-6">
-                {/* Colors */}
-                <div>
-                  <h3 className="text-sm text-gray-600">Color</h3>
 
-                  <RadioGroup value={selectedColor} onChange={setSelectedColor} className="mt-2">
-                    <RadioGroup.Label className="sr-only">Choose a color</RadioGroup.Label>
-                    <div className="flex items-center space-x-3">
-                      {product.colors.map((color) => (
-                        <RadioGroup.Option
-                          key={color.name}
-                          value={color}
-                          className={({ active, checked }) =>
-                            classNames(
-                              color.selectedColor,
-                              active && checked ? 'ring ring-offset-1' : '',
-                              !active && checked ? 'ring-2' : '',
-                              'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 focus:outline-none'
-                            )
-                          }
-                        >
-                          <RadioGroup.Label as="span" className="sr-only">
-                            {color.name}
-                          </RadioGroup.Label>
-                          <span
-                            aria-hidden="true"
-                            className={classNames(
-                              color.bgColor,
-                              'h-8 w-8 rounded-full border border-black border-opacity-10'
-                            )}
-                          />
-                        </RadioGroup.Option>
-                      ))}
-                    </div>
-                  </RadioGroup>
-                </div>
-
-                <div className="mt-10 flex">
+                <div className="mt-10 flex justify-center">
                   <button
-                    type="submit"
-                    className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-gray-400 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                    type="button"
+                    className="flex max-w-full flex-1 items-center justify-center rounded-md border border-transparent bg-gray-400 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
+                    onClick={handleAddToCart}
                   >
                     Add to bag
                   </button>
@@ -210,48 +170,65 @@ const ProductDetailPage = () => {
                 </h2>
 
                 <div className="divide-y divide-gray-200 border-t">
-                  {product.details.map((detail) => (
-                    <Disclosure as="div" key={detail.name}>
-                      {({ open }) => (
-                        <>
-                          <h3>
-                            <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
-                              <span
-                                className={classNames(
-                                  open ? 'text-indigo-600' : 'text-gray-900',
-                                  'text-sm font-medium'
-                                )}
-                              >
-                                {detail.name}
-                              </span>
-                              <span className="ml-6 flex items-center">
-                                {open ? (
-                                  <MinusIcon
-                                    className="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
-                                    aria-hidden="true"
-                                  />
-                                ) : (
-                                  <PlusIcon
-                                    className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
-                                    aria-hidden="true"
-                                  />
-                                )}
-                              </span>
-                            </Disclosure.Button>
-                          </h3>
-                          <Disclosure.Panel as="div" className="prose prose-sm pb-6">
-                            <ul role="list">
-                              {detail.items.map((item) => (
-                                <li key={item}>{item}</li>
-                              ))}
-                            </ul>
-                          </Disclosure.Panel>
-                        </>
-                      )}
-                    </Disclosure>
-                  ))}
+                  <Disclosure as="div" key="details">
+                    {({ open }) => (
+                      <>
+                        <h3>
+                          <Disclosure.Button className="group relative flex w-full items-center justify-between py-6 text-left">
+                            <span
+                              className={classNames(
+                                open ? 'text-indigo-600' : 'text-gray-900',
+                                'text-md font-semibold'
+                              )}
+                            >
+                              Product Details {/* Title for the details disclosure */}
+                            </span>
+                            <span className="ml-6 flex items-center">
+                              {open ? (
+                                <MinusIcon
+                                  className="block h-6 w-6 text-indigo-400 group-hover:text-indigo-500"
+                                  aria-hidden="true"
+                                />
+                              ) : (
+                                <PlusIcon
+                                  className="block h-6 w-6 text-gray-400 group-hover:text-gray-500"
+                                  aria-hidden="true"
+                                />
+                              )}
+                            </span>
+                          </Disclosure.Button>
+                        </h3>
+                        <Disclosure.Panel as="div" className="prose prose-sm pb-6">
+                          <ul role="list">
+                            {productDetailData?.details?.map((detail, index) => (
+                              <li key={index} className='mt-2'>{detail}</li> // Display each detail in a list item
+                            ))}
+                          </ul>
+                        </Disclosure.Panel>
+                      </>
+                    )}
+                  </Disclosure>
                 </div>
               </section>
+                    {/* Reviews */}
+                    <div className="mt-4">
+                <h3 className="sr-only">Reviews</h3>
+                <div className="flex justify-center items-center">
+                  <div className="flex items-center">
+                    {[0, 1, 2, 3, 4].map((rating) => (
+                      <StarIcon
+                        key={rating}
+                        className={classNames(
+                          productDetailData.rating > rating ? 'text-yellow-500' : 'text-gray-300',
+                          'h-5 w-5 flex-shrink-0'
+                        )}
+                        aria-hidden="true"
+                      />
+                    ))}
+                  </div>
+                  <p className="ml-4 font-semibold text-indigo-500">{productDetailData.rating} out of 5 stars</p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -282,14 +259,6 @@ const ProductDetailPage = () => {
                       />
                       <p className="relative text-lg font-semibold text-white">{product.price}</p>
                     </div>
-                  </div>
-                  <div className="mt-6">
-                    <a
-                      href={product.href}
-                      className="relative flex items-center justify-center rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200"
-                    >
-                      Add to bag<span className="sr-only">, {product.name}</span>
-                    </a>
                   </div>
                 </div>
               ))}

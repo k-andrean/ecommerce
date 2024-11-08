@@ -5,7 +5,7 @@ const useGetAllProductsQuery = () => {
     return useQuery({
         queryKey: ['getAllProducts'], // Unique key for this query
         queryFn: async () => {
-            const { data } = await fetchAxios.get('/products');
+            const { data } = await fetchAxios.get('/products/all');
             return data; // Return the data
         },
     });
@@ -32,9 +32,21 @@ const useGetProductWithCategoryQuery = (categoryId) => {
     });
 };
 
+const useGetProductWithCollectionQuery = (collectionId) => {
+    return useQuery({
+        queryKey: ['getProductWithCollection'], // use the object form
+        queryFn: async () => {
+            const { data } = await fetchAxios.get(`/products/collections/${collectionId}`);
+            return data;
+        }
+    });
+};
+
+
 
 export {
     useGetAllProductsQuery,
     useGetProductQuery,
-    useGetProductWithCategoryQuery
+    useGetProductWithCategoryQuery,
+    useGetProductWithCollectionQuery
 }

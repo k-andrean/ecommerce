@@ -1,4 +1,5 @@
 import { getUsers, getUsersById, createUser, updateUser, deleteUser } from '../models/users.js';
+import { hashPassword } from '../utils/index.js';
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -26,11 +27,15 @@ export const createNewUser = async (req, res, next) => {
   try {
     // Assuming 'image' is the key used for file uploads
     const image = req.file;
+    const { phone, ...restOfBody } = req.body;
     const dataUser = {
-      ...req.body,
+      ...restOfBody,
       image_path: image ? image.path : null,
-      phone_number: phone_number ? phone_number : null // Store the image path if uploaded
+      phone_number: phone ? phone : null,
     };
+
+    // Hash the password here before passing to createUser (e.g., with bcryptjs or argon2)
+    dataUser.hashed_password = await hashPassword(dataUser.password); // Assuming password is passed in req.body
 
     const newUser = await createUser(dataUser);
     res.status(201).json(newUser);
@@ -67,9 +72,9 @@ export const removeUser = async (req, res, next) => {
       return res.status(400).json({ message: "Invalid user ID" });
     }
 
-    const deletedUser = await deleteUser(userId);
+    const deletedUserCount = await deleteUser(userId);
 
-    if (!deletedUser) {
+    if (deletedUserCount === 0) {
       return res.status(404).json({ message: "User not found" });
     }
 

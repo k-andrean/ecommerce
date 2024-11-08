@@ -11,6 +11,25 @@ export const getUsersById = async (id) => {
   return rows.length ? rows[0] : null;
 };
 
+export const getUserByUsername = async (identifier) => {
+  try {
+    const trimmedIdentifier = identifier.trim();
+    console.log('Searching for:', trimmedIdentifier); // Log the identifier being searched
+
+    const { rows } = await pool.query(
+      'SELECT * FROM users WHERE name ILIKE $1 LIMIT 1', 
+      [trimmedIdentifier] // Using ILIKE for case-insensitive matching
+    );
+
+    console.log('Query result:', rows); // Log the result of the query
+
+    return rows.length ? rows[0] : null; // Return the user if found
+  } catch (error) {
+    console.error('Error in getUserByUsername:', error); // Log the error
+    throw error; // Rethrow the error to handle it in loginUser
+  }
+};
+
 export const createUser = async (user) => {
     // Set default values for missing fields
     const {
@@ -70,7 +89,8 @@ export const createUser = async (user) => {
   };
 
 export const deleteUser = async (id) => {
-  await pool.query('DELETE FROM users WHERE id = $1', [id]);
+  const result = await pool.query('DELETE FROM users WHERE id = $1', [id]);
+  return result.rowCount;
 };
 
 export const checkExistingUser = async (email, username) => {

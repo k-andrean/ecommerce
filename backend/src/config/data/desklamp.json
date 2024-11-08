@@ -10,7 +10,7 @@
       "rotatable head"
     ],
     "price": 45000,
-    "category_id": 3,
+    "category_id": 48,
     "collection_id": 1,
     "rating": 4.5,
     "image_path": "uploads\\1727612482883-desklamp1.jpg",
@@ -27,7 +27,7 @@
       "heavy base"
     ],
     "price": 85000,
-    "category_id": 3,
+    "category_id": 48,
     "collection_id": 2,
     "rating": 4.7,
     "image_path": "uploads\\1727612482884-desklamp2.jpg",
@@ -44,7 +44,7 @@
       "sleek design"
     ],
     "price": 32000,
-    "category_id": 3,
+    "category_id": 48,
     "collection_id": 3,
     "rating": 4.6,
     "image_path": "uploads\\1727612482886-desklamp3.jpg",
@@ -61,7 +61,7 @@
       "energy-saving"
     ],
     "price": 95000,
-    "category_id": 3,
+    "category_id": 48,
     "collection_id": 4,
     "rating": 4.8,
     "image_path": "uploads\\1727612482892-desklamp4.jpg",
@@ -78,7 +78,7 @@
       "decorative base"
     ],
     "price": 72000,
-    "category_id": 3,
+    "category_id": 48,
     "collection_id": 5,
     "rating": 4.4,
     "image_path": "uploads\\1727612482895-desklamp5.jpg",

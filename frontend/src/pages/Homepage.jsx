@@ -65,12 +65,12 @@ export default function HomePage() {
             The new arrivals have, well, newly arrived. Check out the latest options from our summer small-batch release
             while they're still in stock.
           </p>
-          <a
-            href="#"
+          <Link
+            to={"/products/all"}
             className="mt-8 font-bold text-red-500 inline-block rounded-md border border-transparent bg-white px-8 py-3 text-base text-gray-900 hover:bg-gray-100"
           >
             Shop New Arrivals
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -80,10 +80,10 @@ export default function HomePage() {
             <h2 id="category-heading" className="text-2xl text-red-500 font-bold tracking-tight text-gray-900">
               Shop by Category
             </h2>
-            <a href="#" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+            <Link to="{'/products/all'}" className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
               Browse all categories
               <span aria-hidden="true"> &rarr;</span>
-            </a>
+            </Link>
           </div>
 
           <div className="mt-4 flow-root">
@@ -112,10 +112,10 @@ export default function HomePage() {
           </div>
 
           <div className="mt-6 px-4 sm:hidden">
-            <a href="#" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+            <Link to="{'/products/all'}" className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
               Browse all categories
               <span aria-hidden="true"> &rarr;</span>
-            </a>
+            </Link>
           </div>
         </section>
 
@@ -141,12 +141,12 @@ export default function HomePage() {
                   Make your desk beautiful and organized. Post a picture to social media and watch it get more likes
                   than life-changing announcements.
                 </p>
-                <a
-                  href="#"
+                <Link
+                  to="{products/all}"
                   className="mt-8 font-bold text-red-500 block w-full rounded-md border border-transparent bg-white px-8 py-3 text-base text-gray-900 hover:bg-gray-100 sm:w-auto"
                 >
                   Shop Workspace
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -165,21 +165,25 @@ export default function HomePage() {
           </p>
 
           <div className="mt-10 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:space-y-0">
-            {collections.map((collection) => (
-              <a key={collection.name} href={collection.href} className="group block">
-                <div
-                  aria-hidden="true"
-                  className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg lg:aspect-h-6 lg:aspect-w-5 group-hover:opacity-75"
-                >
-                  <img
-                    src={collection.image_path}
-                    className="h-full w-full object-cover object-center"
-                  />
-                </div>
-                <h3 className="mt-4 text-base font-bold text-red-500">{collection.name}</h3>
-                <p className="mt-2 text-sm text-gray-500">{collection.description}</p>
-              </a>
-            ))}
+          {collections.map((collection) => (
+            <Link 
+              key={collection.name} 
+              to={`/collections/${collection.name}?id=${collection.id}`} 
+              className="group block"
+            >
+              <div
+                aria-hidden="true"
+                className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg lg:aspect-h-6 lg:aspect-w-5 group-hover:opacity-75"
+              >
+                <img
+                  src={collection.image_path}
+                  className="h-full w-full object-cover object-center"
+                />
+              </div>
+              <h3 className="mt-4 text-base font-bold text-red-500">{collection.name}</h3>
+              <p className="mt-2 text-sm text-gray-500">{collection.description}</p>
+            </Link>
+          ))}
           </div>
         </section>
 

@@ -64,5 +64,10 @@ export const createCategory = async (category) => {
   };
 
 export const deleteCategory = async (id) => {
-  await pool.query('DELETE FROM categories WHERE id = $1', [id]);
+  const result = await pool.query('DELETE FROM categories WHERE id = $1', [id]);
+  return result.rowCount;
+};
+
+export const deleteAllCategories = async () => {
+  await pool.query('DELETE FROM categories');
 };

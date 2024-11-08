@@ -1,30 +1,40 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+
+const initialState = {
+  userId: '',
+  username: '',
+  token:'',
+  expire: '',
+};
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: {
-    currentUser: null,
-    cookies: "",
-  },
+  initialState,
   reducers: {
-    setLoginReducer: (state, action) => {
-      state.currentUser = action.payload.currentUser;
-      state.token = action.payload.token;
-      console.log(action.payload.currentUser);
-      state.currentRole = action.payload.currentUser.role[0];
+    login(state, action) {
+      const { userId, username, token, expire } = action.payload;
+      state.userId = userId;
+      state.username = username;
+      state.token = token;
+      // Calculate expiration date based on the "expire" string (e.g., "2d")
+      const days = parseInt(expire, 10); // Parse the numeric part (e.g., 2 from "2d")
+      const expirationDate = new Date();
+      expirationDate.setDate(expirationDate.getDate() + days); // Add days to the current date
+
+      // Store as a timestamp for easy comparison
+      state.expire = expirationDate.getTime();
     },
-    setLogoutReducer: (state) => {
-      state.currentUser = null;
-      state.currentRole = "";
-      state.token = "";
+    logout(state) {
+      state.userId = '';
+      state.username = '';
+      state.token = '';
+      state.expire= '';
     },
   },
-})
+});
 
-export const {
-  setLoginReducer,
-  setLogoutReducer,
-  setRoleReducer,
-} = userSlice.actions;
+// Export the actions
+export const { login, logout } = userSlice.actions;
 
+// Export the reducer
 export default userSlice.reducer;

@@ -10,7 +10,7 @@
       "swivel base"
     ],
     "price": 120000,
-    "category_id": 2,
+    "category_id": 47,
     "collection_id": 1,
     "rating": 4.9,
     "image_path": "uploads\\1727612407185-workchair1.jpg",
@@ -27,7 +27,7 @@
       "non-slip feet"
     ],
     "price": 85000,
-    "category_id": 2,
+    "category_id": 47,
     "collection_id": 2,
     "rating": 4.6,
     "image_path": "uploads\\1727612407187-workchair2.jpg",
@@ -44,7 +44,7 @@
       "soft fabric"
     ],
     "price": 250000,
-    "category_id": 2,
+    "category_id": 47,
     "collection_id": 3,
     "rating": 4.8,
     "image_path": "uploads\\1727612407189-workchair3.jpg",
@@ -61,7 +61,7 @@
       "wooden legs"
     ],
     "price": 95000,
-    "category_id": 2,
+    "category_id": 47,
     "collection_id": 4,
     "rating": 4.7,
     "image_path": "uploads\\1727612407190-workchair4.jpg",
@@ -78,7 +78,7 @@
       "breathable material"
     ],
     "price": 180000,
-    "category_id": 2,
+    "category_id": 47,
     "collection_id": 5,
     "rating": 4.5,
     "image_path": "uploads\\1727612407194-workchair5.jpg",

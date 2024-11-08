@@ -1,171 +1,205 @@
 import React, { useEffect, useState, Fragment } from 'react'
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router-dom';
 import { Disclosure, Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon, FunnelIcon, StarIcon } from '@heroicons/react/20/solid'
 
 import { useGetProductWithCategoryQuery } from 'services/productsAPI';
-
-  // const filters = {
-  //   price: [
-  //     { value: '0', label: '$0 - $25', checked: false },
-  //     { value: '25', label: '$25 - $50', checked: false },
-  //     { value: '50', label: '$50 - $75', checked: false },
-  //     { value: '75', label: '$75+', checked: false },
-  //   ],
-  //   color: [
-  //     { value: 'white', label: 'White', checked: false },
-  //     { value: 'beige', label: 'Beige', checked: false },
-  //     { value: 'blue', label: 'Blue', checked: true },
-  //     { value: 'brown', label: 'Brown', checked: false },
-  //     { value: 'green', label: 'Green', checked: false },
-  //     { value: 'purple', label: 'Purple', checked: false },
-  //   ],
-  //   size: [
-  //     { value: 'xs', label: 'XS', checked: false },
-  //     { value: 's', label: 'S', checked: true },
-  //     { value: 'm', label: 'M', checked: false },
-  //     { value: 'l', label: 'L', checked: false },
-  //     { value: 'xl', label: 'XL', checked: false },
-  //     { value: '2xl', label: '2XL', checked: false },
-  //   ],
-  // }
-  const sortOptions = [
-    { name: 'Most Popular', href: '#', current: true },
-    { name: 'Best Rating', href: '#', current: false },
-    { name: 'Newest', href: '#', current: false },
-    { name: 'Price: Low to High', href: '#', current: false },
-    { name: 'Price: High to Low', href: '#', current: false },
-  ]
-  
-
-  function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
-  }
+import { getPriceRange, classNames, sortOptions, priceRanges } from 'utils';
 
 
 const CategoryPage = () => {
     const { categoryName } = useParams();
     const location = useLocation();
     const [productCategoriesData, setProductCategoriesData] = useState([])
-    const [productCategoriesOptions, setProductCategoriesOptions] = useState(productCategoriesData? : productCategoriesData : [])
-    const [selectedColors, setSelectedColors] = useState([]);
-    const [selectedSizes, setSelectedSizes] = useState([]);
-    const [selectedPrices, setSelectedPrices] = useState([]);
+    const [productCategoriesOptions, setProductCategoriesOptions] = useState([])
+    const [selectedFilters, setSelectedFilters] = useState({
+      color: [],
+      size: [],
+      price: []
+    });
+    const [filters, setFilters] = useState({
+      price: [],
+      color: [],
+      size: [],
+    });
+    const [selectedSortOption, setSelectedSortOption] = useState(null);
 
     const searchParams = new URLSearchParams(location.search);
     const categoryId = searchParams.get('id');
 
     const { data: productsCategoriesRespData, isSuccess: isSuccessProductsCategory} = useGetProductWithCategoryQuery(categoryId);
-
-    useEffect(() => {
-        if (isSuccessProductsCategory && productsCategoriesRespData) {
-            console.log('Product with Category data:', productsCategoriesRespData);
-            const updatedProductCategories = productsCategoriesRespData.map(product => ({
-              ...product,
-              image_path: process.env.REACT_APP_ECOMMERCE_URL + product.image_path.replace(/\\/g, '/'),
-            }));
-            setProductCategoriesData(updatedProductCategories);
-        }
-    }, [isSuccessProductsCategory, productsCategoriesRespData]);
-
-    const priceRanges = [
-      { min: 0, max: 50000, label: "Rp 0 - Rp 50000" },
-      { min: 50000, max: 100000, label: "Rp 50000 - Rp 100000" },
-      { min: 100000, max: 250000, label: "Rp 100000 - Rp 250000" },
-      { min: 250000, max: Infinity, label: "Rp 250000+" }
-    ];
-
-    const getPriceRange = (price) => {
-      const numericPrice = parseFloat(price); // Convert price to number
-      return priceRanges.find(
-        (range) => numericPrice >= range.min && numericPrice < range.max
-      )?.label || "Unknown";
-    };
+  
+    const updateFilters = (data) => {
+      const uniqueColors = [...new Set(data.map((product) => product.color))];
+      const uniqueSizes = [...new Set(data.map((product) => product.size))];
+      const uniquePriceRanges = [...new Set(data.map((product) => getPriceRange(product.price)))];
     
-    // Extract unique colors, sizes, and price ranges
-    const uniqueColors = [...new Set(productCategoriesData.map((product) => product.color))];
-    const uniqueSizes = [...new Set(productCategoriesData.map((product) => product.size))];
-    const uniquePriceRanges = [...new Set(productCategoriesData.map((product) => getPriceRange(product.price)))];
+      const updatedFilters = {
+        price: uniquePriceRanges.map((priceRange) => ({
+          value: priceRange,
+          label: priceRange,
+          checked: false,
+        })),
+        color: uniqueColors.map((color) => ({
+          value: color,
+          label: color,
+          checked: false,
+        })),
+        size: uniqueSizes.map((size) => ({
+          value: size,
+          label: size,
+          checked: false,
+        })),
+      };
     
-    // Create the filters object dynamically
-    const filters = {
-      price: uniquePriceRanges.map((priceRange) => ({
-        value: priceRange, // You can add a numeric value range if needed
-        label: priceRange,
-        checked: false
-      })),
-      color: uniqueColors.map((color) => ({
-        value: color,
-        label: color,
-        checked: false
-      })),
-      size: uniqueSizes.map((size) => ({
-        value: size,
-        label: size,
-        checked: false
-      }))
-    };
-    
-    const handleFilterChange = (filterType, value) => {
-      switch (filterType) {
-        case 'color':
-          setSelectedColors((prev) =>
-            prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-          );
-          break;
-        case 'size':
-          setSelectedSizes((prev) =>
-            prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-          );
-          break;
-        case 'price':
-          setSelectedPrices((prev) =>
-            prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
-          );
-          break;
-        default:
-          break;
-      }
+      setFilters(updatedFilters); // Update the state
     };
 
-    const applyFilters = () => {
-      let filteredData = products;
+  useEffect(() => {
+    if (isSuccessProductsCategory && productsCategoriesRespData) {
+      console.log('Product with Category data:', productsCategoriesRespData);
+
+      // Check if productsCategoriesRespData is an array before mapping
+      const updatedProductCategories = Array.isArray(productsCategoriesRespData) ? 
+        productsCategoriesRespData.map(product => ({
+          ...product,
+          image_path: process.env.REACT_APP_ECOMMERCE_URL + product.image_path.replace(/\\/g, '/'),
+        })) : [];
+
+      setProductCategoriesData(updatedProductCategories);
+      setProductCategoriesOptions(updatedProductCategories);
+
+      updateFilters(updatedProductCategories);
+  }
+}, [isSuccessProductsCategory, productsCategoriesRespData]);
+
+    
+  const handleFilterChange = (filterType, value) => {
+    setSelectedFilters((prev) => {
+      const currentFilterValues = prev[filterType];
+      const updatedFilterValues = currentFilterValues.includes(value)
+        ? currentFilterValues.filter((v) => v !== value) // Remove from selected filters if already checked
+        : [...currentFilterValues, value]; // Add to selected filters if not already checked
+  
+      // Update the filters state to reflect the new checked status
+      const updatedFilters = {
+        ...filters,
+        [filterType]: filters[filterType].map(option =>
+          option.value === value
+            ? { ...option, checked: !option.checked } // Toggle checked state
+            : option
+        )
+      };
+  
+      // Update the selected filters and filters state
+      setFilters(updatedFilters);
+  
+      return {
+        ...prev,
+        [filterType]: updatedFilterValues // Return the updated selected filters
+      };
+    });
+  };
+
+  const applyFilters = () => {
+      let filteredData = productCategoriesData;
     
       // Apply color filters
-      if (selectedColors.length > 0) {
+      if (selectedFilters.color.length > 0) {
         filteredData = filteredData.filter((product) =>
-          selectedColors.includes(product.color)
+          selectedFilters.color.includes(product.color)
         );
       }
     
       // Apply size filters
-      if (selectedSizes.length > 0) {
+      if (selectedFilters.size.length > 0) {
         filteredData = filteredData.filter((product) =>
-          selectedSizes.includes(product.size)
+          selectedFilters.size.includes(product.size)
         );
       }
     
       // Apply price filters
-      if (selectedPrices.length > 0) {
+      if (selectedFilters.price.length > 0) {
         filteredData = filteredData.filter((product) => {
           const productPrice = parseFloat(product.price);
-          return selectedPrices.some((selectedRange) => {
+          return selectedFilters.price.some((selectedRange) => {
             const range = priceRanges.find((r) => r.label === selectedRange);
             return productPrice >= range.min && productPrice < range.max;
           });
         });
       }
+
+          // Apply sort based on the selected sort option
+      if (selectedSortOption) {
+        console.log('selected sort option', selectedSortOption);
+        switch (selectedSortOption.name) {
+          case 'Best Rating':
+            filteredData.sort((a, b) => b.rating - a.rating); // Sort by rating descending
+            break;
+          case 'Newest':
+            filteredData.sort((a, b) => b.id - a.id); // Sort by newest (assuming 'id' or timestamp)
+            break;
+          case 'Price: Low to High':
+            filteredData.sort((a, b) => parseFloat(b.price) - parseFloat(a.price)); // Sort by price ascending
+            break;
+          case 'Price: High to Low':
+            filteredData.sort((a, b) => parseFloat(a.price) - parseFloat(b.price)); // Sort by price descending
+            break;
+          default:
+            break;
+        }
+    }
     
       setProductCategoriesOptions(filteredData);
-    };
+  };
 
     useEffect(() => {
       applyFilters();
-    }, [selectedColors, selectedSizes, selectedPrices]);
+    }, [selectedFilters, selectedSortOption]);
 
-    console.log('product options', productCategoriesOptions);
+    // reset product options when navigated back to page
+    useEffect(() => {
+      if (!selectedFilters.color.length && !selectedFilters.size.length && !selectedFilters.price.length) {
+        setProductCategoriesOptions(productCategoriesData); // Reset to full list if no filters
+      }
+    }, [selectedFilters, productCategoriesData]);
 
-    return (
+    // function for handling sorting filtering data options
+    
+  const handleSortOptionClick = (optionName) => {
+    setSelectedSortOption(optionName); // Set the selected sort option
+  }; 
+    
+  console.log('product options', productCategoriesOptions);
+  console.log('filter options', filters);
+  console.log('selected filters', selectedFilters);
+  console.log('selected sort', selectedSortOption);
+
+  const handleClearAll = () => {
+    setSelectedFilters({
+      color: [],
+      size: [],
+      price: []
+    });
+    setSelectedSortOption(null);
+
+    const updatedFilters = {
+      price: filters.price.map((filter) => ({ ...filter, checked: false })),
+      color: filters.color.map((filter) => ({ ...filter, checked: false })),
+      size: filters.size.map((filter) => ({ ...filter, checked: false })),
+    };
+  
+    // Set the new filters state to trigger a rerender
+    setFilters(updatedFilters);
+  };
+
+  const appliedFilterCount = Object.values(selectedFilters).reduce((count, filterArray) => count + filterArray.length, 0);
+
+  const activeSortCount = selectedSortOption ? 1 : 0;
+
+  const totalActiveCount = appliedFilterCount + activeSortCount;
+
+  return (
         
       <main className="pb-24">
       <div className="px-4 py-16 text-center sm:px-6 lg:px-8">
@@ -192,13 +226,17 @@ const CategoryPage = () => {
                   className="mr-2 h-5 w-5 flex-none text-gray-400 group-hover:text-gray-500"
                   aria-hidden="true"
                 />
-                2 Filters
+                {totalActiveCount}
               </Disclosure.Button>
             </div>
             <div className="pl-6">
-              <button type="button" className="text-gray-500">
-                Clear all
-              </button>
+            <button
+              type="button"
+              className="text-gray-500 cursor-pointer"
+              onClick={handleClearAll}
+            >
+              Clear all
+            </button>
             </div>
           </div>
         </div>
@@ -213,10 +251,9 @@ const CategoryPage = () => {
                       <input
                         id={`price-${optionIdx}`}
                         name="price[]"
-                        defaultValue={option.value}
                         type="checkbox"
                         className="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        defaultChecked={option.checked}
+                        checked={option.checked}
                         onChange={() => handleFilterChange('price', option.value)}
                       />
                       <label htmlFor={`price-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
@@ -236,10 +273,9 @@ const CategoryPage = () => {
                       <input
                         id={`color-${optionIdx}`}
                         name="color[]"
-                        defaultValue={option.value}
                         type="checkbox"
                         className="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        defaultChecked={option.checked}
+                        checked={option.checked}
                         onChange={() => handleFilterChange('color', option.value)}
                       />
                       <label htmlFor={`color-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
@@ -259,10 +295,9 @@ const CategoryPage = () => {
                       <input
                         id={`size-${optionIdx}`}
                         name="size[]"
-                        defaultValue={option.value}
                         type="checkbox"
                         className="h-4 w-4 flex-shrink-0 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        defaultChecked={option.checked}
+                        checked={option.checked}
                         onChange={() => handleFilterChange('size', option.value)}
                       />
                       <label htmlFor={`size-${optionIdx}`} className="ml-3 min-w-0 flex-1 text-gray-600">
@@ -297,18 +332,21 @@ const CategoryPage = () => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none hover:cursor-pointer">
                   <div className="py-1">
                     {sortOptions.map((option) => (
                       <Menu.Item key={option.name}>
                         {({ active }) => (
                           <a
-                            href={option.href}
                             className={classNames(
                               option.current ? 'font-medium text-gray-900' : 'text-gray-500',
                               active ? 'bg-gray-100' : '',
                               'block px-4 py-2 text-sm'
                             )}
+                            onClick={(e) => {
+                              e.preventDefault(); // Prevent default anchor behavior
+                              handleSortOptionClick(option); // Handle sort click
+                            }}
                           >
                             {option.name}
                           </a>
@@ -330,7 +368,7 @@ const CategoryPage = () => {
         </h2>
 
         <div className="-mx-px grid grid-cols-2 border-l border-gray-200 sm:mx-0 md:grid-cols-3 lg:grid-cols-4">
-          {productCategoriesData.map((product) => (
+          {productCategoriesOptions.map((product) => (
             <div key={product.id} className="group relative border-b border-r border-gray-200 p-4 sm:p-6">
               <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-200 group-hover:opacity-75">
                 <img
@@ -340,10 +378,12 @@ const CategoryPage = () => {
               </div>
               <div className="pb-4 pt-10 text-center">
                 <h3 className="text-sm font-medium text-gray-900">
-                  <a href={product.href}>
+                  <Link 
+                    to={`/products/detail/${product.id}`} 
+                  >
                     <span aria-hidden="true" className="absolute inset-0" />
                     {product.name}
-                  </a>
+                  </Link>
                 </h3>
                 <div className="mt-3 flex flex-col items-center">
                   <p className="sr-only">{product.rating} out of 5 stars</p>

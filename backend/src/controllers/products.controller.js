@@ -1,8 +1,19 @@
-import { getProducts, getProductById, getProductByCategoryId, createProduct, createBulkProducts, updateProduct, deleteProduct } from '../models/products.js';
+import { 
+  getAllProductsList, 
+  getProductById, 
+  getProductByCategoryId,
+  getProductByCollectionId, 
+  createProduct, 
+  createBulkProducts, 
+  updateProduct, 
+  deleteProduct ,
+  deleteAllProducts,
+  searchProductByName
+} from '../models/products.js';
 
 export const getAllProducts = async (req, res, next) => {
   try {
-    const products = await getProducts();
+    const products = await getAllProductsList();
     res.status(200).json(products);
   } catch (error) {
     next(error);
@@ -34,6 +45,24 @@ export const getProductByCategory = async (req, res, next) => {
       res.status(200).json(product);
     } else {
       res.status(404).json({ message: 'Product not found for the given category ID' });
+    }
+  } catch (error) {
+    next(error); 
+  }
+};
+
+export const getProductByCollection = async (req, res, next) => {
+  try {
+    const collectionId = parseInt(req.params.collectionId); // Parse the categoryId from request params
+    if (isNaN(collectionId)) {
+      return res.status(400).json({ message: 'Invalid collection ID' });
+    }
+
+    const product = await getProductByCollectionId(collectionId); // Call the query with categoryId
+    if (product) {
+      res.status(200).json(product);
+    } else {
+      res.status(404).json({ message: 'Product not found for the given collection ID' });
     }
   } catch (error) {
     next(error); 
@@ -88,12 +117,17 @@ export const createNewMultiProduct = async (req, res, next) => {
   export const updateExistingProduct = async (req, res, next) => {
     try {
       const image = req.file; // Get image from uploaded files (if any)
-      const dataProduct = {
-        ...req.body,
-        image_path: image ? image.path : null  // Use image path if uploaded, else null
-    };
+      const dataProduct = { ...req.body };
+      const { id: productId } = req.params
+      // console.log('data product', productId)
+      // Only add `image_path` to `dataProduct` if an image was uploaded
+      if (image) {
+        dataProduct.image_path = image.path;
+      }
   
-      const updatedProduct = await updateProduct(parseInt(dataProduct.id), dataProduct);
+      const updatedProduct = await updateProduct(Number(productId), dataProduct);
+
+      console.log("Updating product with data:", dataProduct);
   
       if (updatedProduct) {
         res.status(200).json(updatedProduct);
@@ -101,7 +135,9 @@ export const createNewMultiProduct = async (req, res, next) => {
         res.status(404).json({ message: 'Product not found' });
       }
     } catch (error) {
+      console.error("Error updating product:", error);
       next(error);
+
     }
   };
 
@@ -124,13 +160,44 @@ export const removeProduct = async (req, res, next) => {
         return res.status(400).json({ message: "Invalid product ID" });
       }
   
-      const deletedProduct = await deleteProduct(productId);
+      const deletedProductCount = await deleteProduct(productId);
   
-      if (!deletedProduct) {
+      if (deletedProductCount === 0) {
         return res.status(404).json({ message: "Product not found" });
       }
   
       res.status(204).end(); // No content for successful deletion
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  export const removeAllProducts = async (req, res, next) => {
+    try {
+      await deleteAllProducts();
+      res.status(204).end(); // No content for successful deletion
+    } catch (error) {
+      next(error);
+    }
+  };
+
+
+  export const searchProductByNameController = async (req, res, next) => {
+    try {
+      const { name } = req.query; // Get the search term from query parameters
+      console.log('name', name);
+      if (!name) {
+        return res.status(400).json({ message: 'Search term is required' });
+      }
+  
+      // Call the model function to search products
+      const products = await searchProductByName(name);
+  
+      if (products.length > 0) {
+        res.status(200).json(products);
+      } else {
+        res.status(404).json({ message: 'No products found' });
+      }
     } catch (error) {
       next(error);
     }

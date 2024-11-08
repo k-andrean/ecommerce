@@ -10,7 +10,7 @@
       "perforated pages"
     ],
     "price": 15000,
-    "category_id": 5,
+    "category_id": 50,
     "collection_id": 1,
     "rating": 4.5,
     "image_path": "uploads\\1727612565718-notebook1.jpg",
@@ -27,7 +27,7 @@
       "pen holder"
     ],
     "price": 75000,
-    "category_id": 5,
+    "category_id": 50,
     "collection_id": 2,
     "rating": 4.8,
     "image_path": "uploads\\1727612565720-notebook2.jpg",
@@ -44,7 +44,7 @@
       "minimalistic design"
     ],
     "price": 25000,
-    "category_id": 5,
+    "category_id": 50,
     "collection_id": 3,
     "rating": 4.6,
     "image_path": "uploads\\1727612565723-notebook3.jpg",
@@ -61,7 +61,7 @@
       "lay-flat binding"
     ],
     "price": 20000,
-    "category_id": 5,
+    "category_id": 50,
     "collection_id": 4,
     "rating": 4.7,
     "image_path": "uploads\\1727612565724-notebook4.jpg",
@@ -78,7 +78,7 @@
       "map pages included"
     ],
     "price": 18000,
-    "category_id": 5,
+    "category_id": 50,
     "collection_id": 5,
     "rating": 4.4,
     "image_path": "uploads\\1727612565726-notebook5.jpg",

@@ -10,7 +10,7 @@
       "luxurious design"
     ],
     "price": 30000,
-    "category_id": 4,
+    "category_id": 49,
     "collection_id": 1,
     "rating": 4.9,
     "image_path": "uploads\\1727612331226-pen1.jpg",
@@ -27,7 +27,7 @@
       "refillable"
     ],
     "price": 8000,
-    "category_id": 4,
+    "category_id": 49,
     "collection_id": 2,
     "rating": 4.6,
     "image_path": "uploads\\1727612331227-pen2.jpg",
@@ -44,7 +44,7 @@
       "clip for pocket"
     ],
     "price": 15000,
-    "category_id": 4,
+    "category_id": 49,
     "collection_id": 3,
     "rating": 4.7,
     "image_path": "uploads\\1727612331230-pen3.jpg",
@@ -61,7 +61,7 @@
       "non-toxic ink"
     ],
     "price": 12000,
-    "category_id": 4,
+    "category_id": 49,
     "collection_id": 4,
     "rating": 4.5,
     "image_path": "uploads\\1727612331231-pen4.jpg",
@@ -78,7 +78,7 @@
       "quick-drying"
     ],
     "price": 18000,
-    "category_id": 4,
+    "category_id": 49,
     "collection_id": 5,
     "rating": 4.8,
     "image_path": "uploads\\1727612331232-pen5.jpg",

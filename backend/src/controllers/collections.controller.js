@@ -53,12 +53,23 @@ export const createMultiCollection = async (req, res, next) => {
 export const updateExistingCollection = async (req, res, next) => {
   try {
     const image = req.file; // Get image from uploaded files (if any)
+    const collectionId = parseInt(req.params.id, 10);
+
+    if (isNaN(collectionId)) {
+      return res.status(400).json({ message: `Invalid ID for collection: ${collectionId}` });
+    }
+
+    const existingCollection = await getCollectionById(collectionId);
+    if (!existingCollection) {
+      return res.status(404).json({ message: `No collection found with ID ${collectionId}` });
+    }
+
     const dataCollection = {
       ...req.body,
-      image_path: image ? image.path : null  // Use image path if uploaded, else null
+      image_path: image ? image.path : existingCollection.image_path  // Use new image path if uploaded, otherwise keep the existing one
     };
 
-    const updatedCollection = await updateCollection(parseInt(dataCollection.id), dataCollection);
+    const updatedCollection = await updateCollection(collectionId, dataCollection);
     if (updatedCollection) {
       res.status(200).json(updatedCollection);
     } else {
@@ -70,7 +81,11 @@ export const updateExistingCollection = async (req, res, next) => {
 };
 
 export const updateMultiCollections = async (req, res, next) => {
-  const { collections } = req.body; // Extract the collections array from the request body
+  // const { collections } = req.body; // Extract the collections array from the request body
+
+  const collections = typeof req.body.collections === 'string'
+  ? JSON.parse(req.body.collections)
+  : req.body.collections;
 
   // Check if the collections are provided
   if (!collections || !collections.length) {
@@ -82,20 +97,27 @@ export const updateMultiCollections = async (req, res, next) => {
 
     // Loop through each collection in the request
     for (const collection of collections) {
-      const { id, name, description, image_path } = collection;
+      const { id, name, description} = collection;
 
       // Ensure that id is valid and explicitly parse it as an integer
       const parsedId = parseInt(id, 10);
+      console.log('parsed id', parsedId)
 
       if (!parsedId || isNaN(parsedId)) {
         return res.status(400).json({ message: `Invalid ID for collection: ${JSON.stringify(collection)}` });
+      }
+
+      const existingCollection = await getCollectionById(parsedId);
+      if (!existingCollection) {
+        console.error(`No collection found with ID ${parsedId}`);
+        continue; // Skip to the next category if it doesn't exist
       }
 
       // Update each collection by its ID using the updateCollection function
       const updatedCollection = await updateCollection(parsedId, {
         name,
         description,
-        image_path,
+        image_path: collection.image_path ? collection.image_path : existingCollection.image_path,
       });
 
       // Add updated collection to the array if successful
@@ -124,14 +146,15 @@ export const updateMultiCollections = async (req, res, next) => {
 export const removeCollection = async (req, res, next) => {
     try {
       const collectionId = parseInt(req.params.id);
+      console.log('collection Id', collectionId)
   
       if (isNaN(collectionId)) {
         return res.status(400).json({ message: "Invalid collection ID" });
       }
   
-      const deletedCollection = await deleteCollection(collectionId);
+      const deletedCollectionCount = await deleteCollection(collectionId);
   
-      if (!deletedCollection) {
+      if (deletedCollectionCount === 0) {
         return res.status(404).json({ message: "Collection not found" });
       }
   

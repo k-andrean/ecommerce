@@ -32,7 +32,7 @@ export const createCollection = async (collection) => {
 
   export const updateCollection = async (id, collection) => {
     // Step 1: Fetch the current product data by ID
-    const { rows: existingRows } = await pool.query('SELECT * FROM categories WHERE id = $1', [id]);
+    const { rows: existingRows } = await pool.query('SELECT * FROM collections WHERE id = $1', [id]);
   
     // If no product is found, return null
     if (!existingRows.length) {
@@ -63,5 +63,6 @@ export const createCollection = async (collection) => {
   };
 
 export const deleteCollection = async (id) => {
-  await pool.query('DELETE FROM collections WHERE id = $1', [id]);
+  const result = await pool.query('DELETE FROM collections WHERE id = $1', [id]);
+  return result.rowCount;
 };

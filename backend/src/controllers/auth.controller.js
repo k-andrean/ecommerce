@@ -1,71 +1,56 @@
+import { getUserByUsername, getUsersById } from '../models/users.js';
+import { comparePasswords } from '../utils/index.js'; // Function to compare passwords using bcrypt
 import jwt from 'jsonwebtoken';
-import { getUsersById, createUser, checkExistingUser } from '../models/users.js';
-import bcrypt from 'bcrypt'; 
 
-export const registerUser = async (req, res, next) => {
-    try {
-      const { name, email, username, password, phone_number } = req.body; // Include phone_number
-  
-      // Check if the user already exists by email or username
-      const existingUser = await checkExistingUser(email, username);
-      if (existingUser) {
-        return res.status(400).json({ message: 'User with this email or username already exists' });
-      }
-  
-      // Hash the password before saving
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      // Create the new user
-      const newUser = await createUser({
-        ...req.body,
-        password: hashedPassword,  // Use the hashed password
-        phone_number: phone_number || null, // Make phone_number nullable if not provided
-      });
-  
-      // Generate a JWT token and set it as a cookie
-      const token = jwt.sign(
-        { userId: newUser.id, email: newUser.email, username: newUser.username },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
-      );
-  
-      res.cookie('token', token, { httpOnly: true });
-      res.status(201).json({ message: 'User registered successfully', user: newUser });
-    } catch (error) {
-      next(error);
-    }
-  };
+// Controller for login
+export const loginUser = async (req, res, next) => {
+  try {
+    const { identifier, password } = req.body; // 'identifier' could be username or email
+    console.log('data', req.body);
 
-  export const loginUser = async (req, res, next) => {
-    try {
-      const { username, password } = req.body;
-  
-      // Check if user exists by username
-      const user = await checkExistingUser(null, username);
-      if (!user) {
-        return res.status(404).json({ message: 'User not found' });
-      }
-  
-      // Verify password
-      const passwordMatch = await bcrypt.compare(password, user.password);
-      if (!passwordMatch) {
-        return res.status(400).json({ message: 'Invalid credentials' });
-      }
-  
-      // Generate a JWT token and set it as a cookie
-      const token = jwt.sign(
-        { userId: user.id, email: user.email, username: user.username },
-        process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
-      );
-  
-      res.cookie('token', token, { httpOnly: true });
-      res.status(200).json({ message: 'Login successful', user });
-    } catch (error) {
-      next(error);
+    const user = await getUserByUsername(identifier);
+    console.log('user', user);
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
     }
-  };
-  
+
+    // Check if the password matches
+    const isPasswordValid = await comparePasswords(password, user.hashed_password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    // Create JWT token
+    const token = jwt.sign(
+      { userId: user.id, username: user.name }, // Payload data
+      process.env.JWT_SECRET_KEY, // Secret key
+      { expiresIn: '2d' } // Token expiration time
+    );
+
+    const expire = '2d'
+
+    // Set the token as an HTTP-only cookie (to prevent JavaScript access)
+    res.cookie('authToken', token, {
+      httpOnly: true, // HTTP-only so it's not accessible by JavaScript
+      secure: process.env.NODE_ENV === 'production', // Only use cookies over HTTPS in production
+      sameSite: 'Strict', // To protect against CSRF attacks
+      maxAge: 3600000, // 1 hour
+    });
+
+
+    res.status(200).json({ 
+      message: 'Login successful', 
+      token,
+      expire, 
+      userId: user.id, 
+      username: user.name 
+    });
+  } catch (error) {
+    next(error); // Forward error to error handling middleware
+  }
+};
   // Logout a user (clear the cookie)
   export const logoutUser = (req, res, next) => {
     try {

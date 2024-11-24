@@ -69,12 +69,12 @@ export const createUser = async (user) => {
     const updatedUser = {
       ...existingUser,
       ...user, // This will overwrite only the fields provided in the request body
-      image_path: user.image_path ? user.image_path : existingProduct.image_path,
+      image_path: user.image_path ? user.image_path : existingUser.image_path,
     };
   
     // Step 3: Update the product in the database
     const { rows: updatedRows } = await pool.query(
-      'UPDATE users SET name = $1, email = $2, phone_number = $3, password = $4, image_path = $5 WHERE id = $6 RETURNING *',
+      'UPDATE users SET name = $1, email = $2, phone_number = $3, hashed_password = $4, image_path = $5 WHERE id = $6 RETURNING *',
       [
         updatedUser.name,
         updatedUser.email,

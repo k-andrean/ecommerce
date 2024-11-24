@@ -15,6 +15,7 @@ import CollectionPen from 'assets/pencollection.jpg'
 import CollectionDesk from 'assets/deskcollection.jpg'
 import CollectionLamp from 'assets/lampcollection.jpg'
 
+
 const navigation = {
   categories: [
     {
@@ -171,11 +172,10 @@ function classNames(...classes) {
 }
 
 export default function HomePage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
     <div className="bg-white">
-      {/* Mobile menu */}
+      Mobile menu
       <Transition.Root show={mobileMenuOpen} as={Fragment}>
         <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileMenuOpen}>
           <Transition.Child

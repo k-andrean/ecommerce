@@ -26,7 +26,13 @@ export const getCategory = async (req, res, next) => {
 export const createNewCategory = async (req, res, next) => {
     try {
       // Pass the entire req.body object to createProduct
-      const newCategory = await createCategory(req.body);
+      const image = req.file
+      const category = req.body
+
+      if(image){
+        category.image_path = image.path
+      }
+      const newCategory = await createCategory(category);
   
       res.status(201).json(newCategory);
     } catch (error) {

@@ -13,6 +13,7 @@ import {
 import { StarIcon } from '@heroicons/react/20/solid'
 import CollectionDesk from 'assets/deskcollection.jpg'
 import CollectionLamp from 'assets/lampcollection.jpg'
+import fetchAxios from 'utils/axios';
 
 const relatedProducts = [
   {
@@ -33,6 +34,7 @@ const ProductDetailPage = () => {
   const { productId } = useParams();
   const [productDetailData, setProductDetailData] = useState({});
   const [quantity, setSelectedQuantity] = useState(1);
+  const [relatedProduct, setRelatedProduct] = useState([]);
   const dispatch = useDispatch();
 
   // Get current user ID from the Redux store (from user slice)
@@ -55,6 +57,41 @@ const ProductDetailPage = () => {
       setProductDetailData(updatedProductDetail);
     }
   }, [isSuccessProductDetail, productDetailRespData]);
+
+   // When product data is successfully fetched, update state and fetch related products
+   useEffect(() => {
+    // Check if productDetailData has been set and is not empty
+    if (productDetailData && productDetailData.category_id) {
+      const fetchRelatedData = async () => {
+        try {
+          // Fetch related products based on category ID
+          const response = await fetchAxios.get(`/products/categories/${productDetailData.category_id}`);
+  
+          // Check if response has data and update state
+          if (response?.data?.length) {
+            // Filter out the current product from related products
+            const relatedProductData = response.data.filter((data) => data.id !== productDetailData.id);
+  
+            // Update image_path for each related product
+            const updatedRelatedProductsData = relatedProductData.map((product) => ({
+              ...product,
+              image_path: process.env.REACT_APP_ECOMMERCE_URL + product.image_path.replace(/\\/g, '/')
+            }));
+            console.log('updated', updatedRelatedProductsData)
+  
+            setRelatedProduct(updatedRelatedProductsData);
+          } else {
+            setRelatedProduct([]); // Set empty array if no related products are found
+          }
+        } catch (error) {
+          console.error("Failed to fetch related products:", error);
+        }
+      };
+  
+      // Call the function
+      fetchRelatedData();
+    }
+  }, [productDetailData]);
 
   // Handle adding the product to the cart
   const handleAddToCart = () => {
@@ -238,13 +275,12 @@ const ProductDetailPage = () => {
             </h2>
 
             <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
-              {relatedProducts.map((product) => (
+              {relatedProduct?.map((product) => (
                 <div key={product.id}>
                   <div className="relative">
                     <div className="relative h-72 w-full overflow-hidden rounded-lg">
                       <img
-                        src={product.imageSrc}
-                        alt={product.imageAlt}
+                        src={product.image_path}
                         className="h-full w-full object-cover object-center"
                       />
                     </div>
@@ -257,7 +293,7 @@ const ProductDetailPage = () => {
                         aria-hidden="true"
                         className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"
                       />
-                      <p className="relative text-lg font-semibold text-white">{product.price}</p>
+                      <p className="relative text-lg font-semibold text-white">Rp {Math.floor(product.price)}</p>
                     </div>
                   </div>
                 </div>

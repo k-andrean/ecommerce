@@ -7,8 +7,8 @@ const categoriesRoutes = express.Router();
 
 categoriesRoutes.get('/', getAllCategories);
 categoriesRoutes.get('/:id', getCategory);
-categoriesRoutes.post('/', createNewCategory);
-categoriesRoutes.post('/many', createMultiCategories);
+categoriesRoutes.post('/',  upload.single('images'), createNewCategory);
+categoriesRoutes.post('/many',  upload.array('images', 10), createMultiCategories);
 categoriesRoutes.put('/:id',  upload.single('images'), updateExistingCategory);
 categoriesRoutes.put('/multiple/all',  upload.array('images', 10), updateMultiCategories);
 categoriesRoutes.delete('/:id', removeCategory);

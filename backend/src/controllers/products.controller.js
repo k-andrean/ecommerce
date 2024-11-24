@@ -71,7 +71,12 @@ export const getProductByCollection = async (req, res, next) => {
 
 export const createNewProduct = async (req, res, next) => {
     try {
+      const image = req.file; 
       const product = req.body;
+
+      if (image){
+        product.image_path = image.path
+      }
       const newProduct = await createProduct(product);
   
       res.status(201).json(newProduct);

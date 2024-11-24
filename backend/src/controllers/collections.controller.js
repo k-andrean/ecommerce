@@ -26,7 +26,13 @@ export const getCollection = async (req, res, next) => {
 export const createNewCollection = async (req, res, next) => {
     try {
       // Pass the entire req.body object to createProduct
-      const newCollection = await createCollection(req.body);
+      const image = req.file
+      const collection = req.body
+
+      if(image){
+        collection.image_path = image.path
+      }
+      const newCollection = await createCollection(collection);
   
       res.status(201).json(newCollection);
     } catch (error) {

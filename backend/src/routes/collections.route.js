@@ -7,8 +7,8 @@ const collectionsRoutes = express.Router();
 
 collectionsRoutes.get('/', getAllCollections);
 collectionsRoutes.get('/:id', getCollection);
-collectionsRoutes.post('/', createNewCollection);
-collectionsRoutes.post('/many', createMultiCollection);
+collectionsRoutes.post('/',  upload.single('images'), createNewCollection);
+collectionsRoutes.post('/many',  upload.array('images', 10), createMultiCollection);
 collectionsRoutes.put('/:id', upload.single('images'), updateExistingCollection);
 collectionsRoutes.put('/multiple/all', upload.array('images', 10), updateMultiCollections);
 collectionsRoutes.delete('/:id', removeCollection);

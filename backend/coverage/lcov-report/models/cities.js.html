@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.88% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/36</span>
+                <span class='fraction'>16/36</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">60% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/5</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">13.88% </span>
+                <span class="strong">44.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/36</span>
+                <span class='fraction'>16/36</span>
             </div>
         
             
@@ -215,39 +215,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -310,22 +310,22 @@ export const fetchCitiesFromApi = <span class="fstat-no" title="function not cov
 };
 &nbsp;
 // Function to get all cities from the cities table
-export const getAllCities = <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-  const { rows } = <span class="cstat-no" title="statement not covered" >await pool.query('SELECT * FROM cities');</span>
-<span class="cstat-no" title="statement not covered" >  return rows;</span>
+export const getAllCities = async () =&gt; {
+  const { rows } = await pool.query('SELECT * FROM cities');
+  return rows;
 };
 &nbsp;
-export const getDistinctProvinces = <span class="fstat-no" title="function not covered" >as</span>ync () =&gt; {
-<span class="cstat-no" title="statement not covered" >    console.log('distinct called')</span>
-    const query = <span class="cstat-no" title="statement not covered" >`</span>
+export const getDistinctProvinces = async () =&gt; {
+    console.log('distinct called')
+    const query = `
       SELECT DISTINCT province_id, province 
       FROM cities 
       ORDER BY province_id;
     `;
     
-<span class="cstat-no" title="statement not covered" >    try {</span>
-      const { rows } = <span class="cstat-no" title="statement not covered" >await pool.query(query);</span>
-<span class="cstat-no" title="statement not covered" >      return rows;</span>
+    try {
+      const { rows } = await pool.query(query);
+      return rows;
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      console.error("Error retrieving distinct provinces:", error);</span>
 <span class="cstat-no" title="statement not covered" >      throw error; </span>// Rethrow the error for handling in route
@@ -333,17 +333,17 @@ export const getDistinctProvinces = <span class="fstat-no" title="function not c
   };
 &nbsp;
 &nbsp;
-export const getCitiesByProvinceId = <span class="fstat-no" title="function not covered" >as</span>ync (provinceId) =&gt; {
-    const query = <span class="cstat-no" title="statement not covered" >`</span>
+export const getCitiesByProvinceId = async (provinceId) =&gt; {
+    const query = `
       SELECT *
       FROM cities
       WHERE province_id = $1
       ORDER BY city_name;  -- You can order by any other column if needed
     `;
   
-<span class="cstat-no" title="statement not covered" >    try {</span>
-      const { rows } = <span class="cstat-no" title="statement not covered" >await pool.query(query, [provinceId]);</span>
-<span class="cstat-no" title="statement not covered" >      return rows;</span>
+    try {
+      const { rows } = await pool.query(query, [provinceId]);
+      return rows;
     } catch (error) {
 <span class="cstat-no" title="statement not covered" >      console.error("Error retrieving cities by province ID:", error);</span>
 <span class="cstat-no" title="statement not covered" >      throw error; </span>// Rethrow the error for handling in the route
@@ -358,7 +358,7 @@ export const getCitiesByProvinceId = <span class="fstat-no" title="function not 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-11-07T11:38:38.208Z
+                at 2024-11-09T11:12:58.411Z
             </div>
         <script src="../prettify.js"></script>
         <script>

@@ -1,5 +1,11 @@
-import { getUsers, getUsersById, createUser, updateUser, deleteUser } from '../models/users.js';
-import { hashPassword } from '../utils/index.js';
+import {
+  getUsers,
+  getUsersById,
+  createUser,
+  updateUser,
+  deleteUser,
+} from "../models/users.js";
+import { hashPassword } from "../utils/index.js";
 
 export const getAllUsers = async (req, res, next) => {
   try {
@@ -16,7 +22,7 @@ export const getUser = async (req, res, next) => {
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     next(error);
@@ -25,7 +31,6 @@ export const getUser = async (req, res, next) => {
 
 export const createNewUser = async (req, res, next) => {
   try {
-    // Assuming 'image' is the key used for file uploads
     const image = req.file;
     const { phone, ...restOfBody } = req.body;
     const dataUser = {
@@ -34,8 +39,7 @@ export const createNewUser = async (req, res, next) => {
       phone_number: phone ? phone : null,
     };
 
-    // Hash the password here before passing to createUser (e.g., with bcryptjs or argon2)
-    dataUser.hashed_password = await hashPassword(dataUser.password); // Assuming password is passed in req.body
+    dataUser.hashed_password = await hashPassword(dataUser.password);
 
     const newUser = await createUser(dataUser);
     res.status(201).json(newUser);
@@ -46,7 +50,7 @@ export const createNewUser = async (req, res, next) => {
 
 export const updateExistingUser = async (req, res, next) => {
   try {
-    const image = req.file; // Get the uploaded image file (if any)
+    const image = req.file;
     const dataUser = {
       ...req.body,
       image_path: image ? image.path : req.body.image_path || null, // Update image path if new file is uploaded
@@ -57,7 +61,7 @@ export const updateExistingUser = async (req, res, next) => {
     if (updatedUser) {
       res.status(200).json(updatedUser);
     } else {
-      res.status(404).json({ message: 'User not found' });
+      res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     next(error);
@@ -78,7 +82,7 @@ export const removeUser = async (req, res, next) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(204).end(); // No content for successful deletion
+    res.status(204).end();
   } catch (error) {
     next(error);
   }

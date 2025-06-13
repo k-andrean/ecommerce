@@ -1,4 +1,3 @@
-// table
 [
     {
         "name": "Folding Table",
@@ -64,10 +63,7 @@
         "rating": 4.7,
         "image_path": "",
         "quantity": 8
-    }
-]
-// desk lamp
-[
+    },
     {
         "name": "Modern Desk Lamp",
         "color": "Black",
@@ -132,12 +128,7 @@
         "rating": 4.4,
         "image_path": "",
         "quantity": 12
-    }
-]
-
-// notebook
-
-[
+    },
     {
         "name": "Classic Spiral Notebook",
         "color": "Blue",
@@ -202,12 +193,7 @@
         "rating": 4.4,
         "image_path": "",
         "quantity": 25
-    }
-]
-
-// chair
-
-[
+    },
     {
         "name": "Ergonomic Office Chair",
         "color": "Black",
@@ -272,12 +258,7 @@
         "rating": 4.5,
         "image_path": "",
         "quantity": 25
-    }
-]
-
-// pen
-
-[
+    },
     {
         "name": "Executive Fountain Pen",
         "color": "Black",
